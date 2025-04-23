@@ -1,6 +1,6 @@
 # GCP Certification Quiz App  
 A bilingual quiz app to prepare for the Google Cloud Professional Data Engineer exam.  
-Una aplicación bilingüe de preguntas y respuestas para prepararse para el examen de certificación GCP Data Engineer.
+Una aplicación bilingüe para prepararse para la certificación GCP Data Engineer.
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
@@ -12,24 +12,21 @@ Una aplicación bilingüe de preguntas y respuestas para prepararse para el exam
 
 ---
 
-## Live Demo / Demostración en vivo
+## 🌐 Live Demo / Demostración en vivo
 
-[*Launch App on Vercel*](https://gcp-quiz.vercel.app)  
-[*Probar aplicación en Vercel*](https://gcp-quiz.vercel.app)
-
----
-
-## App Preview / Vista previa
-
-![App Banner](:/public/gcp-quiz-banner.png)  
-Interactive quiz interface / Interfaz de preguntas
-
-![Loading Animation](public/quiz-loader.gif)  
-Loading indicator / Indicador de carga
+[▶ Launch App on Vercel**](https://gcp-quiz.vercel.app)
 
 ---
 
-## Features / Características
+## 🖼 App Preview / Vista previa
+
+<img src="./public/gcp-quiz-banner.png" alt="App Banner" width="100%"/>
+
+<img src="./public/quiz-loader.gif" alt="Loading Animation" width="300"/>
+
+---
+
+## ✨ Features / Características
 
 ### Core Functionality
 
@@ -53,62 +50,58 @@ Loading indicator / Indicador de carga
 
 ---
 
-## Tech Stack / Tecnologías
+## 🛠 Tech Stack / Tecnologías
 
-- *Lenguaje / Language*: JavaScript
-- *Framework*: React
-- *Routing*: React Router DOM
-- *Estilos / Styles*: CSS
-- *Despliegue / Deployment*: Vercel
-- *Formato de datos / Data Format*: JSON
-
----
-
-## Prerequisites / Requisitos
-
-- Node.js v18+
-- npm v9+ or yarn v1.22+
-- Git
+- *Lenguaje / Language:* JavaScript
+- *Framework:* React
+- *Routing:* React Router DOM
+- *Estilos / Styles:* CSS
+- *Despliegue / Deployment:* Vercel
+- *Formato de datos / Data Format:* JSON
 
 ---
 
-## Quick Start / Inicio rápido
+## ⚙ Quick Start / Inicio rápido
+
+*Clonar el repositorio / Clone the repository:*
 
 ```bash
-# Clone repo
 git clone https://github.com/your-username/gcp-certification-quiz-app.git
 cd gcp-certification-quiz-app
 
-# Install dependencies
+Instalar dependencias / Install dependencies:
+
 npm install
 
-# Run app locally
+Ejecutar en local / Run locally:
+
 npm start
 
-# Run tests
+Ejecutar tests / Run tests:
+
 npm test
 
-# Build for production
+Build para producción / Build for production:
+
 npm run build
 
-# Deploy to Vercel
+
+---
+
+🚀 Deployment / Despliegue
+
+Deploy con Vercel:
+
 vercel --prod
+
+O hacé click en:
+
+
 
 
 ---
 
-Deployment / Despliegue
-
-
-
-O manualmente con:
-
-vercel --prod
-
-
----
-
-Contributing / Contribuciones
+🤝 Contributing / Contribuciones
 
 We welcome contributions!
 ¡Agradecemos contribuciones!
@@ -127,26 +120,23 @@ We welcome contributions!
 
 
 Check CONTRIBUTING.md for more details.
-
 Consulta CONTRIBUTING.md para más detalles.
 
 
 ---
 
-License / Licencia
+📄 License / Licencia
 
-MIT License.
-Free to use, modify and distribute.
+MIT License
 Libre para usar, modificar y compartir.
-
 See LICENSE for full details.
 
 
 ---
 
-Support / Soporte
+🛟 Support / Soporte
 
 Found a bug or want to suggest an improvement?
 ¿Encontraste un bug o querés proponer una mejora?
 
-Open an Issue
+➡ Open an Issue
