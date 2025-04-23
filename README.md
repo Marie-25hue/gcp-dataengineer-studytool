@@ -1,3 +1,4 @@
+
 # GCP Certification Quiz App  
 A bilingual quiz app to prepare for the Google Cloud Professional Data Engineer exam.  
 Una aplicación bilingüe para prepararse para la certificación GCP Data Engineer.
@@ -20,9 +21,10 @@ Una aplicación bilingüe para prepararse para la certificación GCP Data Engine
 
 ## 🖼 App Preview / Vista previa
 
-<img src="./public/gcp-quiz-banner.png" alt="App Banner" width="100%"/>
+<img src="gcp-quiz-banner.png" alt="App Banner" width="100%"/>
 
-<img src="./public/quiz-loader.gif" alt="Loading Animation" width="300"/>
+<!-- GIF must be in root folder for GitHub to show it -->
+<img src="quiz-loader.gif" alt="Loading Animation" width="300"/>
 
 ---
 
@@ -63,25 +65,25 @@ Una aplicación bilingüe para prepararse para la certificación GCP Data Engine
 
 ## ⚙ Quick Start / Inicio rápido
 
-*Clonar el repositorio / Clone the repository:*
+### 📥 Clone the repository / Clonar repositorio
 
 ```bash
 git clone https://github.com/your-username/gcp-certification-quiz-app.git
 cd gcp-certification-quiz-app
 
-Instalar dependencias / Install dependencies:
+📦 Install dependencies / Instalar dependencias
 
 npm install
 
-Ejecutar en local / Run locally:
+▶ Run locally / Ejecutar en local
 
 npm start
 
-Ejecutar tests / Run tests:
+✅ Run tests / Ejecutar tests
 
 npm test
 
-Build para producción / Build for production:
+🏗 Build for production / Build para producción
 
 npm run build
 
@@ -140,3 +142,5 @@ Found a bug or want to suggest an improvement?
 ¿Encontraste un bug o querés proponer una mejora?
 
 ➡ Open an Issue
+
+---
