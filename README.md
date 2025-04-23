@@ -1,7 +1,6 @@
-
 # GCP Certification Quiz App  
-A bilingual quiz app to prepare for the Google Cloud Professional Data Engineer exam.  
-Una aplicación bilingüe para prepararse para la certificación GCP Data Engineer.
+*A bilingual quiz app to prepare for the Google Cloud Professional Data Engineer exam.*  
+*Una aplicación bilingüe para prepararse para la certificación GCP Data Engineer.*
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
@@ -15,15 +14,14 @@ Una aplicación bilingüe para prepararse para la certificación GCP Data Engine
 
 ## 🌐 Live Demo / Demostración en vivo
 
-[▶ Launch App on Vercel**](https://gcp-quiz.vercel.app)
+[**▶️ Launch App on Vercel**](https://gcp-quiz.vercel.app)
 
 ---
 
-## 🖼 App Preview / Vista previa
+## 🖼️ App Preview / Vista previa
 
 <img src="gcp-quiz-banner.png" alt="App Banner" width="100%"/>
 
-<!-- GIF must be in root folder for GitHub to show it -->
 <img src="quiz-loader.gif" alt="Loading Animation" width="300"/>
 
 ---
@@ -32,9 +30,9 @@ Una aplicación bilingüe para prepararse para la certificación GCP Data Engine
 
 ### Core Functionality
 
-- 📚 *100+ exam-style questions* in JSON
-- 🎯 *Two modes*: Study (retry) & Exam (timed)
-- ⏱ Timer and score tracking
+- 📚 **100+ exam-style questions** in JSON
+- 🎯 **Two modes**: Study (retry) & Exam (timed)
+- ⏱️ Timer and score tracking
 - 🧠 Immediate feedback & explanations
 - 🌐 Bilingual (English / Español)
 - 📱 Fully responsive UI
@@ -42,9 +40,9 @@ Una aplicación bilingüe para prepararse para la certificación GCP Data Engine
 
 ### Funcionalidad principal
 
-- 📚 *100+ preguntas tipo examen* en JSON
-- 🎯 *Dos modos*: Estudio (reintento) y Examen (tiempo)
-- ⏱ Temporizador y puntuación
+- 📚 **100+ preguntas tipo examen** en JSON
+- 🎯 **Dos modos**: Estudio (reintento) y Examen (tiempo)
+- ⏱️ Temporizador y puntuación
 - 🧠 Feedback inmediato y explicaciones
 - 🌐 Bilingüe (Inglés / Español)
 - 📱 Interfaz adaptable
@@ -52,95 +50,92 @@ Una aplicación bilingüe para prepararse para la certificación GCP Data Engine
 
 ---
 
-## 🛠 Tech Stack / Tecnologías
+## 🛠️ Tech Stack / Tecnologías
 
-- *Lenguaje / Language:* JavaScript
-- *Framework:* React
-- *Routing:* React Router DOM
-- *Estilos / Styles:* CSS
-- *Despliegue / Deployment:* Vercel
-- *Formato de datos / Data Format:* JSON
+- **Lenguaje / Language:** JavaScript
+- **Framework:** React
+- **Routing:** React Router DOM
+- **Estilos / Styles:** CSS
+- **Despliegue / Deployment:** Vercel
+- **Formato de datos / Data Format:** JSON
 
 ---
 
-## ⚙ Quick Start / Inicio rápido
+## ⚙️ Quick Start / Inicio rápido
 
 ### 📥 Clone the repository / Clonar repositorio
 
 ```bash
 git clone https://github.com/your-username/gcp-certification-quiz-app.git
 cd gcp-certification-quiz-app
+```
 
-📦 Install dependencies / Instalar dependencias
+### 📦 Install dependencies / Instalar dependencias
 
+```bash
 npm install
+```
 
-▶ Run locally / Ejecutar en local
+### ▶️ Run locally / Ejecutar en local
 
+```bash
 npm start
+```
 
-✅ Run tests / Ejecutar tests
+### ✅ Run tests / Ejecutar tests
 
+```bash
 npm test
+```
 
-🏗 Build for production / Build para producción
+### 🏗️ Build for production / Build para producción
 
+```bash
 npm run build
-
+```
 
 ---
 
-🚀 Deployment / Despliegue
+## 🚀 Deployment / Despliegue
 
 Deploy con Vercel:
 
+```bash
 vercel --prod
+```
 
 O hacé click en:
 
-
-
-
----
-
-🤝 Contributing / Contribuciones
-
-We welcome contributions!
-¡Agradecemos contribuciones!
-
-1. Fork this repo / Haz un fork
-
-
-2. Create your feature branch / Crea tu rama
-
-
-3. Commit your changes / Hacé commit
-
-
-4. Push and open a PR / Subí y abrí un Pull Request
-
-
-
-Check CONTRIBUTING.md for more details.
-Consulta CONTRIBUTING.md para más detalles.
-
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project)
 
 ---
 
-📄 License / Licencia
+## 🤝 Contributing / Contribuciones
 
-MIT License
-Libre para usar, modificar y compartir.
+**We welcome contributions!**  
+**¡Agradecemos contribuciones!**
+
+1. Fork this repo / Haz un fork  
+2. Create your feature branch / Crea tu rama  
+3. Commit your changes / Hacé commit  
+4. Push and open a PR / Subí y abrí un Pull Request  
+
+Check `CONTRIBUTING.md` for more details.  
+Consulta `CONTRIBUTING.md` para más detalles.
+
+---
+
+## 📄 License / Licencia
+
+**MIT License**  
+Libre para usar, modificar y compartir.  
 See LICENSE for full details.
 
-
 ---
 
-🛟 Support / Soporte
+## 🛟 Support / Soporte
 
-Found a bug or want to suggest an improvement?
+Found a bug or want to suggest an improvement?  
 ¿Encontraste un bug o querés proponer una mejora?
 
-➡ Open an Issue
-
----
+[➡️ Open an Issue](https://github.com/your-username/gcp-certification-quiz-app/issues)
