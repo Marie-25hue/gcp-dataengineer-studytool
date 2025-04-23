@@ -1,4 +1,4 @@
- GCP Data Engineer Quiz App
+## GCP Data Engineer Quiz App
 
 ![Banner de GCP Data Engineer Quiz App mostrando una pregunta de ejemplo sobre BigQuery](./gcp-quiz-banner.png)
 
@@ -54,32 +54,20 @@ useEffect(() => {
 }, []);
 
 
----
-
-Revisión técnica por IA compañera
+## Revisión técnica por IA compañera
 
 Una IA experta en desarrollo frontend revisó este proyecto y dejó el siguiente análisis:
 
-✔ useState bien aplicado.
-
-✔ Lógica clara y fluida.
-
-✔ Modularidad de preguntas escalable.
-
-✔ UX adaptativa, con feedback inmediato.
-
-✔ Tailwind CSS aplicado (requiere instalación previa).
-
-✔ Flujo controlado: no se avanza sin acertar.
-
+- ✔ `useState` bien aplicado.  
+- ✔ Lógica clara y fluida.  
+- ✔ Modularidad de preguntas escalable.  
+- ✔ UX adaptativa, con feedback inmediato.  
+- ✔ Tailwind CSS aplicado (requiere instalación previa).  
+- ✔ Flujo controlado: no se avanza sin acertar.
 
 > “Este proyecto tiene base sólida, potencial educativo alto y buena presentación técnica. Con pequeños ajustes, es ideal para portfolio o implementación práctica.”
 
 
+## Créditos
 
-
----
-
-Créditos
-
-Desarrollado por Marie, con ayuda de IA, pasión por el conocimiento y una pizca de fe en que todo se puede aprender
+Desarrollado por **Marie**, con ayuda de IA, pasión por el conocimiento y una pizca de fe en que todo se puede aprender.
