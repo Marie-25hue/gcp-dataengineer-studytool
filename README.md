@@ -15,6 +15,12 @@ Una app interactiva para practicar temas de la certificación **Google Cloud Pro
 - Está pensada para ampliarse por temas (BigQuery, Dataflow, IAM, etc.).
 
 ---
+Sí, se nota que el README quedó cortado justo en las secciones de instrucciones. Pero no pasa nada, ¡vamos a dejarlo impecable!
+
+Acá tenés la parte corregida completa, lista para pegar en el editor de GitHub:
+
+
+---
 
 ## ¿Cómo ejecutarla localmente?
 
@@ -32,10 +38,10 @@ npm start
 1. Subí tu proyecto a GitHub.
 
 
-2. Entrá a vercel.com, logueate con GitHub.
+2. Entrá a vercel.com, logueate.
 
 
-3. Seleccioná tu repo y ¡listo! Tenés la app online.
+3. Seleccioná tu repo y ¡listo!
 
 
 
@@ -45,7 +51,7 @@ npm start
 ¿Cómo usar quizData.json?
 
 La app puede cargar dinámicamente preguntas desde un archivo externo.
-Subí un archivo quizData.json en la raíz del proyecto y usá un fetch() para cargarlo:
+Subí un archivo quizData.json en la raíz del proyecto y usá este fetch():
 
 useEffect(() => {
   fetch('/quizData.json')
@@ -54,20 +60,32 @@ useEffect(() => {
 }, []);
 
 
-## Revisión técnica por IA compañera
+---
+
+Revisión técnica por IA compañera
 
 Una IA experta en desarrollo frontend revisó este proyecto y dejó el siguiente análisis:
 
-- ✔ `useState` bien aplicado.  
-- ✔ Lógica clara y fluida.  
-- ✔ Modularidad de preguntas escalable.  
-- ✔ UX adaptativa, con feedback inmediato.  
-- ✔ Tailwind CSS aplicado (requiere instalación previa).  
-- ✔ Flujo controlado: no se avanza sin acertar.
+✔ useState bien aplicado.
+
+✔ Lógica clara y fluida.
+
+✔ Modularidad de preguntas escalable.
+
+✔ UX adaptativa, con feedback inmediato.
+
+✔ Tailwind CSS aplicado (requiere instalación previa).
+
+✔ Flujo controlado: no se avanza sin acertar.
+
 
 > “Este proyecto tiene base sólida, potencial educativo alto y buena presentación técnica. Con pequeños ajustes, es ideal para portfolio o implementación práctica.”
 
 
-## Créditos
 
-Desarrollado por **Marie**, con ayuda de IA, pasión por el conocimiento y una pizca de fe en que todo se puede aprender.
+
+---
+
+Créditos
+
+Desarrollado por Marie, con ayuda de IA, pasión por el conocimiento y una pizca de fe en que todo se puede aprender.
