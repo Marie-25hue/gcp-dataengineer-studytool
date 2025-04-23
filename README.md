@@ -1,6 +1,7 @@
 # GCP Certification Quiz App
 
-![Banner](./src/assets/gcp-quiz-banner.png)
+
+![GCP Quiz App Banner](public/gcp-quiz-banner.png)
 
 An interactive quiz web app to help you study for the **Google Cloud Professional Data Engineer Certification** — with two modes: **Study Mode** and **Exam Mode**.
 
@@ -18,7 +19,7 @@ An interactive quiz web app to help you study for the **Google Cloud Professiona
 
 ## Screenshots
 
-![App Demo](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2p4cGU2cDQ4Y21qZzFva3E0YjJxeTR5NmRncjM0Zm14M2x5bnZ4aiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/GKnArMZUt0CscVTlYb/giphy.gif)
+![Demo of Quiz App](public/demo.gif)
 
 ---
 
