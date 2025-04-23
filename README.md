@@ -1,70 +1,71 @@
-# GCP Data Engineer Quiz App
+# GCP Certification Quiz App
 
-![Banner de GCP Data Engineer Quiz App mostrando una pregunta de ejemplo sobre BigQuery](./gcp-quiz-banner.png)
+![Banner](./src/assets/gcp-quiz-banner.png)
 
-Una app interactiva para practicar temas de la certificación **Google Cloud Professional Data Engineer**, con preguntas tipo examen, feedback instantáneo y navegación bloqueada hasta responder correctamente.
-
----
-
-## ¿Qué hace?
-
-- Presenta preguntas de opción múltiple.  
-- Da retroalimentación inmediata con explicación.  
-- Impide avanzar hasta responder correctamente.  
-- Muestra puntaje final.  
-- Está pensada para ampliarse por temas (BigQuery, Dataflow, IAM, etc.).
+An interactive quiz web app to help you study for the **Google Cloud Professional Data Engineer Certification** — with two modes: **Study Mode** and **Exam Mode**.
 
 ---
 
-## ¿Cómo ejecutarla localmente?
+## Features
+
+- 100 hand-crafted questions with explanations
+- Toggle between **Study** and **Exam** modes
+- Instant feedback in Study Mode
+- Fully responsive (mobile-friendly)
+- Deployed on Vercel
+
+---
+
+## Screenshots
+
+![App Demo](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2p4cGU2cDQ4Y21qZzFva3E0YjJxeTR5NmRncjM0Zm14M2x5bnZ4aiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/GKnArMZUt0CscVTlYb/giphy.gif)
+
+---
+
+## Installation
 
 ```bash
-npx create-react-app certification-quiz
-cd certification-quiz
-# Reemplazá App.js con tu archivo personalizado
-npm start
+git clone https://github.com/your-username/gcp-quiz-app.git
+cd gcp-quiz-app
+npm install
+npm run dev
 ```
 
 ---
 
-## ¿Cómo desplegarla?
+## Deployment
 
-1. Subí tu proyecto a GitHub.  
-2. Entrá a [vercel.com](https://vercel.com), logueate.  
-3. Seleccioná tu repo y ¡listo!
+This project is ready to deploy on **Vercel**.
 
----
+Make sure your `vercel.json` includes:
 
-## ¿Cómo usar quizData.json?
-
-La app puede cargar dinámicamente preguntas desde un archivo externo.  
-Subí un archivo `quizData.json` en la raíz del proyecto y usá este `fetch()`:
-
-```js
-useEffect(() => {
-  fetch('/quizData.json')
-    .then(res => res.json())
-    .then(data => setPreguntas(data));
-}, []);
+```json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
 ```
 
 ---
 
-## Revisión técnica por IA compañera
+## Data
 
-Una IA experta en desarrollo frontend revisó este proyecto y dejó el siguiente análisis:
+Questions are stored in `/src/data/preguntas_gcp_con_id.json`.
 
-- ✔ `useState` bien aplicado.  
-- ✔ Lógica clara y fluida.  
-- ✔ Modularidad de preguntas escalable.  
-- ✔ UX adaptativa, con feedback inmediato.  
-- ✔ Tailwind CSS aplicado (requiere instalación previa).  
-- ✔ Flujo controlado: no se avanza sin acertar.
-
-> “Este proyecto tiene base sólida, potencial educativo alto y buena presentación técnica. Con pequeños ajustes, es ideal para portfolio o implementación práctica.”
+Each question includes:
+- `id`
+- `question`
+- `options`
+- `answer`
+- `explanation`
 
 ---
 
-## Créditos
+## License
 
-Desarrollado por **Marie**, con ayuda de IA, pasión por el conocimiento y una pizca de fe en que todo se puede aprender.
+MIT. Use it, fork it, improve it.
+
+---
+
+Built with heart, caffeine and GCP docs.
