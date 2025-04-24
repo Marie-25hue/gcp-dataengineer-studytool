@@ -77,18 +77,18 @@ export default function ExamMode() {
         {questions[current].options.map((opt, index) => (
           <button
             key={index}
-            onClick={() => handleSelect(opt)}
+            onClick={() => handleSelect(questions[current].options[index])}
             style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: selected === opt ? '#388e3c' : '#00bcd4',
-              border: selected === opt ? '2px solid #2e7d32' : 'none',
-              transform: selected === opt ? 'scale(1.05)' : 'scale(1)',
-              boxShadow: selected === opt ? '0 0 10px #2e7d32' : 'none',
-              color: '#fff',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              minWidth: '200px',
-              transition: 'background-color 0.3s ease',
+            padding: '0.5rem 1rem',
+            backgroundColor: selected === questions[current].options[index] ? '#388e3c' : '#00bcd4',
+            border: selected === questions[current].options[index] ? '2px solid #2e7d32' : 'none',
+            transform: selected === questions[current].options[index] ? 'scale(1.05)' : 'scale(1)',
+            boxShadow: selected === questions[current].options[index] ? '0 0 10px #2e7d32' : 'none'
+            color: '#fff',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            minWidth: '200px',
+            transition: 'background-color 0.3s ease',
             }}
           >
             {opt}
