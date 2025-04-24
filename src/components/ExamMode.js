@@ -1,64 +1,47 @@
-// src/App.js
-import React, { useState } from 'react';
-import StudyMode from './components/StudyMode';
-import ExamMode from './components/ExamMode';
+import React, { useState, useEffect } from 'react';
+import questions from '../data/questions.json';
 
-export default function App() {
-  const [mode, setMode] = useState(null);
-  const [lang, setLang] = useState('es');
+export default function ExamMode() {
+  const [current, setCurrent] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [results, setResults] = useState([]);
 
-  const t = {
-    es: {
-      title: 'GCP Certification Quiz App',
-      choose: 'Elige un modo para comenzar:',
-      study: '🧠 Modo Estudio',
-      exam: '📝 Modo Examen',
-      back: '⬅ Volver',
-      language: 'Idioma'
-    },
-    en: {
-      title: 'GCP Certification Quiz App',
-      choose: 'Choose a mode to begin:',
-      study: '🧠 Study Mode',
-      exam: '📝 Exam Mode',
-      back: '⬅ Back',
-      language: 'Language'
-    }
+  useEffect(() => {
+    if (timeLeft === 0) handleNext();
+    const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const handleSelect = (opt) => setSelected(opt);
+
+  const handleNext = () => {
+    const correct = selected === questions[current].answer;
+    setResults([...results, { question: questions[current].question, selected, correct }]);
+    if (correct) setScore(score + 1);
+    setSelected(null);
+    setTimeLeft(60);
+    setCurrent((prev) => prev + 1);
   };
 
-  return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial, sans-serif' }}>
-      <h1>{t[lang].title}</h1>
-
-      <div style={{ marginBottom: '1rem' }}>
-        <label>{t[lang].language}:</label>
-        <select value={lang} onChange={(e) => setLang(e.target.value)}>
-          <option value="es">Español</option>
-          <option value="en">English</option>
-        </select>
+  if (current >= questions.length) {
+    return (
+      <div>
+        <h2>📝 Examen Finalizado</h2>
+        <p>Tu puntuación: {score}/{questions.length}</p>
+        <ul>
+          {results.map((r, i) => (
+            <li key={i}>{r.question} - {r.correct ? '✅' : '❌'} (Elegiste: {r.selected})</li>
+          ))}
+        </ul>
       </div>
+    );
+  }
 
-      {!mode && (
-        <div>
-          <p>{t[lang].choose}</p>
-          <button onClick={() => setMode('study')}>{t[lang].study}</button>
-          <button onClick={() => setMode('exam')}>{t[lang].exam}</button>
-        </div>
-      )}
-
-      {mode === 'study' && (
-        <>
-          <StudyMode />
-          <button onClick={() => setMode(null)}>{t[lang].back}</button>
-        </>
-      )}
-
-      {mode === 'exam' && (
-        <>
-          <ExamMode />
-          <button onClick={() => setMode(null)}>{t[lang].back}</button>
-        </>
-      )}
-    </div>
-  );
-}
+  return (
+    <div>
+      <h2>📝 Modo Examen</h2>
+      <p>⏱ Tiempo restante: {timeLeft}s</p>
+      <p>{questions[current].question}</p>
+      {questions[current].options.map((opt) =>
