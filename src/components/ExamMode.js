@@ -5,6 +5,7 @@ export default function ExamMode() {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
   const [finished, setFinished] = useState(false);
 
   useEffect(() => {
@@ -14,24 +15,25 @@ export default function ExamMode() {
       .catch((err) => console.error('Error loading questions:', err));
   }, []);
 
+  if (questions.length === 0) return <p>Cargando examen...</p>;
+
   const handleSelect = (option) => {
     setSelected(option);
+    setShowAnswer(true);
+    if (option === questions[current].answer) {
+      setScore((prev) => prev + 1);
+    }
   };
 
   const next = () => {
-    if (selected === questions[current].answer) {
-      setScore(score + 1);
-    }
-
     if (current + 1 < questions.length) {
       setCurrent(current + 1);
       setSelected(null);
+      setShowAnswer(false);
     } else {
       setFinished(true);
     }
   };
-
-  if (questions.length === 0) return <p>Cargando examen...</p>;
 
   if (finished) {
     return (
@@ -46,20 +48,37 @@ export default function ExamMode() {
     <div>
       <h2>📝 Modo Examen</h2>
       <p>{questions[current].question}</p>
-      {questions[current].options.map((opt) => (
-        <button
-          key={opt}
-          onClick={() => handleSelect(opt)}
-          style={{
-            margin: '0.5rem',
-            backgroundColor:
-              selected === opt ? '#cceeff' : ''
-          }}
-        >
-          {opt}
-        </button>
-      ))}
-      <button onClick={next} disabled={!selected}>Siguiente</button>
+      {questions[current].options.map((opt) => {
+        let style = {};
+
+        if (showAnswer) {
+          if (opt === questions[current].answer) {
+            style.backgroundColor = 'lightgreen';
+          } else if (opt === selected) {
+            style.backgroundColor = '#ffb3b3';
+          }
+        }
+
+        return (
+          <button
+            key={opt}
+            onClick={() => handleSelect(opt)}
+            className="btn-answer"
+            style={style}
+            disabled={showAnswer}
+          >
+            {opt}
+          </button>
+        );
+      })}
+      <br />
+      <button
+        onClick={next}
+        className="btn-next"
+        disabled={!showAnswer}
+      >
+        Siguiente
+      </button>
     </div>
   );
-            }
+              }
