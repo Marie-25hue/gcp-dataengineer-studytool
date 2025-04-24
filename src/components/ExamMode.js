@@ -17,7 +17,7 @@ export default function ExamMode() {
 
   const next = () => {
     if (current + 1 === questions.length) {
-      alert(Tu puntaje final es ${score} de ${questions.length});
+      alert(`Tu puntaje final es ${score} de ${questions.length}`);
       window.location.reload();
       return;
     }
