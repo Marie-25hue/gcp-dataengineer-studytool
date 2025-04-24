@@ -44,4 +44,23 @@ export default function ExamMode() {
       <h2>📝 Modo Examen</h2>
       <p>⏱ Tiempo restante: {timeLeft}s</p>
       <p>{questions[current].question}</p>
-      {questions[current].options.map((opt) =>
+      {questions[current].options.map((opt, idx) => (
+        <div key={idx}>
+          <label>
+            <input
+              type="radio"
+              name="option"
+              value={opt}
+              checked={selected === opt}
+              onChange={() => handleSelect(opt)}
+            />
+            {opt}
+          </label>
+        </div>
+      ))}
+      <button onClick={handleNext} disabled={selected === null}>
+        Siguiente
+      </button>
+    </div>
+  );
+        }
