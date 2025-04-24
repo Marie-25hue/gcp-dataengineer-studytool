@@ -9,17 +9,18 @@ export default function ExamMode() {
 
   // Temporizador
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          finishExam();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
+  const timer = setInterval(() => {
+    setTimeLeft((prevTime) => {
+      if (prevTime <= 1) {
+        clearInterval(timer);
+        finishExam(true); // pasamos un flag indicando que terminó por tiempo
+        return 0;
+      }
+      return prevTime - 1;
+    });
+  }, 1000);
+
+  return () => clearInterval(timer);
   }, []);
 
   const formatTime = (seconds) => {
@@ -50,10 +51,16 @@ export default function ExamMode() {
     window.location.href = '/';
   };
 
-  const finishExam = () => {
-    // alert(`Examen finalizado.\nTu puntaje es ${score} de ${questions.length}`);
+   const finishExam = (fromTimer = false) => {
+   const mensaje = fromTimer
+    ? 'Se agotó el tiempo.'
+    : '¡Terminaste el examen!';
+
+   setTimeout(() => {
+    alert(`${mensaje}\nTu puntaje es ${score} de ${questions.length}`);
     window.location.reload();
-  };
+   }, 300);
+   };
 
   return (
     <div className="quiz-card fade-in" key={current}>
@@ -83,7 +90,7 @@ export default function ExamMode() {
             backgroundColor: selected === questions[current].options[index] ? '#388e3c' : '#00bcd4',
             border: selected === questions[current].options[index] ? '2px solid #2e7d32' : 'none',
             transform: selected === questions[current].options[index] ? 'scale(1.05)' : 'scale(1)',
-            boxShadow: selected === questions[current].options[index] ? '0 0 10px #2e7d32' : 'none'
+            boxShadow: selected === questions[current].options[index] ? '0 0 10px #2e7d32' : 'none',
             color: '#fff',
             borderRadius: '8px',
             cursor: 'pointer',
