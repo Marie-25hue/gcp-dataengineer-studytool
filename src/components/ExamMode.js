@@ -69,7 +69,7 @@ export default function ExamMode() {
     style={{
   width: `${((current + 1) / questions.length) * 100}%`
 }}
- `data-progress={${((current + 1) / questions.length) * 100}%`}
+ data-progress={`${Math.round(((current + 1) / questions.length) * 100)}%`}
   ></div>
 </div>
       <p>{questions[current].question}</p>
