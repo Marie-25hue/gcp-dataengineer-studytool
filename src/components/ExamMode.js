@@ -5,7 +5,7 @@ export default function ExamMode() {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(7200); // 120 minutos en segundos
+  const [timeLeft, finishexamLeft] = useState(7200); // 120 minutos en segundos
 
   // Temporizador
   useEffect(() => {
@@ -80,13 +80,15 @@ export default function ExamMode() {
             onClick={() => handleSelect(opt)}
             style={{
               padding: '0.5rem 1rem',
-              backgroundColor: selected === opt ? '#cce5ff' : '#00bcd4',
+              backgroundColor: selected === opt ? '#388e3c' : '#00bcd4',
+              border: selected === opt ? '2px solid #2e7d32' : 'none',
+              transform: selected === opt ? 'scale(1.05)' : 'scale(1)',
+              boxShadow: selected === opt ? '0 0 10px #2e7d32' : 'none',
               color: '#fff',
-              border: 'none',
               borderRadius: '8px',
               cursor: 'pointer',
               minWidth: '200px',
-              transition: 'background-color 0.3s',
+              transition: 'background-color 0.3s ease',
             }}
           >
             {opt}
