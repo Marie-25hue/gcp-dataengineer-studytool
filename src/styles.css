@@ -42,3 +42,31 @@ div {
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
+.btn-answer {
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-answer:hover {
+  background-color: #d5d5d5;
+}
+
+.btn-next {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-next:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
