@@ -98,3 +98,12 @@ div {
   border-radius: 10px;
   transition: width 0.5s ease-in-out;
 }
+.progress-bar::after {
+  content: attr(data-progress);
+}
+@media (max-width: 600px) {
+  .progress-container {
+    width: 95%;
+    height: 16px;
+  }
+}
