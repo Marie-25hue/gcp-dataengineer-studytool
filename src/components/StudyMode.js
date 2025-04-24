@@ -61,13 +61,17 @@ export default function StudyMode() {
         </div>
       )}
 
-      <button onClick={next} style={{ marginTop: '1rem' }}>
-        Siguiente
-      </button>
+      {showAnswer && (
+        <button onClick={next} className="btn-next" style={{ marginTop: '1rem' }}>
+          Siguiente
+        </button>
+      )}
 
-      <button onClick={volverAlMenu} style={{ marginTop: '1rem' }}>
-        Volver
-      </button>
+      <div style={{ marginTop: '2rem' }}>
+        <button onClick={volverAlMenu} className="btn-return">
+          Volver
+        </button>
+      </div>
     </div>
   );
 }
