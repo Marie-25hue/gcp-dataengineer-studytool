@@ -17,7 +17,7 @@ export default function ExamMode() {
 
   const next = () => {
     if (current + 1 === questions.length) {
-      alert(`Tu puntaje final es ${score} de ${questions.length}`);
+      alert('Tu puntaje final es ' + score + ' de ' + questions.length);
       window.location.reload();
       return;
     }
@@ -63,13 +63,23 @@ export default function ExamMode() {
         );
       })}
 
-      <button onClick={next} style={{ marginTop: '1rem' }}>
-        Siguiente
-      </button>
+      {showAnswer && (
+        <div style={{ fontSize: '2rem', marginTop: '1rem' }}>
+          {selected === questions[current].answer ? '✅ ¡Correcto!' : '❌ Ups, no era esa'}
+        </div>
+      )}
 
-      <button onClick={volverAlMenu} style={{ marginTop: '1rem' }}>
-        Volver
-      </button>
-    </div>
-  );
+      {showAnswer && (
+        <button onClick={next} className="btn-next" style={{ marginTop: '1rem' }}>
+          Siguiente
+        </button>
+      )}
+
+      <div style={{ marginTop: '2rem' }}>
+        <button onClick={volverAlMenu} className="btn-return">
+          Volver
+        </button>
+      </div>
+    </div>
+  );
 }
