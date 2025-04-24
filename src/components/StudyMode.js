@@ -29,6 +29,9 @@ export default function StudyMode() {
   return (
     <div className="quiz-card">
       <h2>🧠 Modo Estudio</h2>
+      <p style={{ fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
+  Bienvenida al modo estudio. Elegí una opción y descubrí cuál es la respuesta correcta. ¡Sin presión, solo para aprender!
+</p>
       <p>{questions[current].question}</p>
       {questions[current].options.map((opt) => {
         let style = {};
