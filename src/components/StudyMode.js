@@ -17,6 +17,11 @@ export default function StudyMode() {
     setShowAnswer(false);
   };
 
+  // --- Validación por si no hay preguntas cargadas ---
+  if (!questions || questions.length === 0) {
+    return <p>No hay preguntas disponibles.</p>;
+  }
+
   return (
     <div>
       <h2>🧠 Modo Estudio</h2>
