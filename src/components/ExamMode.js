@@ -47,6 +47,9 @@ export default function ExamMode() {
   return (
     <div className="quiz-card">
       <h2>📝 Modo Examen</h2>
+      <p style={{ fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
+  Este es el modo examen. Responde sin pistas. Al final verás tu puntaje. ¡Buena suerte!
+   </p>
       <p>{questions[current].question}</p>
       {questions[current].options.map((opt) => {
         let style = {};
