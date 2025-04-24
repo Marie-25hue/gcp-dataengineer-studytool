@@ -13,7 +13,7 @@ export default function ExamMode() {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          finishExam(); // cuando el tiempo se agota
+          finishExam();
           return 0;
         }
         return prev - 1;
@@ -23,11 +23,9 @@ export default function ExamMode() {
   }, []);
 
   const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, '0');
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
-    return `${m}:${s}` ;
+    return ${m}:${s};
   };
 
   const handleSelect = (opt) => {
@@ -53,8 +51,8 @@ export default function ExamMode() {
   };
 
   const finishExam = () => {
-   alert(`Examen finalizado.\nTu puntaje es ${score} de ${questions.length}`);
-window.location.reload();
+    // alert(`Examen finalizado.\nTu puntaje es ${score} de ${questions.length}`);
+    window.location.reload();
   };
 
   return (
@@ -74,28 +72,63 @@ window.location.reload();
 
       <p style={{ fontWeight: 'bold' }}>{questions[current].question}</p>
 
-      {questions[current].options.map((opt) => (
+      {/* Opciones de respuesta */}
+      <div style={{ marginTop: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
+        {questions[current].options.map((opt, index) => (
+          <button
+            key={index}
+            onClick={() => handleSelect(opt)}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: selected === opt ? '#cce5ff' : '#00bcd4',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              minWidth: '200px',
+              transition: 'background-color 0.3s',
+            }}
+          >
+            {opt}
+          </button>
+        ))}
+      </div>
+
+      {/* Botones de navegación */}
+      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
         <button
-          key={opt}
-          onClick={() => handleSelect(opt)}
+          onClick={next}
+          disabled={!selected}
           style={{
-            margin: '0.5rem',
-            backgroundColor: selected === opt ? '#cce5ff' : '',
+            padding: '0.6rem 1.5rem',
+            backgroundColor: selected ? '#4caf50' : '#a5d6a7',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontWeight: 'bold',
+            cursor: selected ? 'pointer' : 'not-allowed',
+            transition: 'all 0.3s',
           }}
         >
-          {opt}
+          Siguiente
         </button>
-      ))}
 
-      <button onClick={next} className="btn-next" style={{ marginTop: '1rem' }} disabled={!selected}>
-        Siguiente
-      </button>
-
-      <div style={{ marginTop: '2rem' }}>
-        <button onClick={volverAlMenu} className="btn-return">
+        <button
+          onClick={volverAlMenu}
+          style={{
+            padding: '0.6rem 1.5rem',
+            backgroundColor: '#9e9e9e',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            transition: 'all 0.3s',
+          }}
+        >
           Volver
         </button>
       </div>
-    </div>
-  );
+    </div>
+  );
 }
