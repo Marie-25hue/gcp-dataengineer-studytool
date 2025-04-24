@@ -26,46 +26,55 @@ export default function StudyMode() {
     setShowAnswer(false);
   };
 
-  return (
-    <div className="quiz-card">
-      <h2>🧠 Modo Estudio</h2>
-      <p style={{ fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
-  Bienvenida al modo estudio. Elegí una opción y descubrí cuál es la respuesta correcta. ¡Sin presión, solo para aprender!
-</p>
+return (
+  <div className="quiz-card fade-in" key={current}>
+    <h2>🧠 Modo Estudio</h2>
+    <p style={{ fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
+      Bienvenida al modo estudio. Elegí una opción y descubrí cuál es la respuesta correcta.
+      ¡Sin presión, solo para aprender!
+    </p>
+
+    {/* Contador de pregunta */}
     <p style={{ fontSize: '0.95rem', marginBottom: '0.5rem', color: '#555' }}>
-  Pregunta {current + 1} de {questions.length}
-</p>
-  <div className="fade-in" key={current}>
-  <p style={{ fontWeight: 'bold' }}>
-      <p>{questions[current].question}</p>
-      {questions[current].options.map((opt) => {
-        let style = {};
+      Pregunta {current + 1} de {questions.length}
+    </p>
 
-        if (showAnswer) {
-          if (opt === questions[current].answer) {
-            style.backgroundColor = 'lightgreen';
-          } else if (opt === selected) {
-            style.backgroundColor = '#ffb3b3'; // rojo clarito
-          }
+    {/* Pregunta + opciones */}
+    <p style={{ fontWeight: 'bold' }}>{questions[current].question}</p>
+    {questions[current].options.map((opt) => {
+      let style = {};
+      if (showAnswer) {
+        if (opt === questions[current].answer) {
+          style.backgroundColor = 'lightgreen';
+        } else if (opt === selected) {
+          style.backgroundColor = '#ffb3b3';
         }
+      }
+      return (
+        <button
+          key={opt}
+          onClick={() => handleSelect(opt)}
+          style={{ ...style, margin: '0.5rem' }}
+        >
+          {opt}
+        </button>
+      );
+    })}
 
-        return (
-          <button
-            key={opt}
-            onClick={() => handleSelect(opt)}
-            className="btn-answer"
-            style={style}
-            disabled={showAnswer}
-          >
-            {opt}
-          </button>
-        );
-      })}
-    </div>
-      <br />
-      <button onClick={next} className="btn-next" disabled={!showAnswer}>
-        Siguiente
-      </button>
-    </div>
-  );
-        }
+    {/* Emoji respuesta */}
+    {showAnswer && (
+      <div style={{ fontSize: '2rem', marginTop: '1rem' }}>
+        {selected === questions[current].answer ? '✅ ¡Correcto!' : '❌ Ups, no era esa'}
+      </div>
+    )}
+
+    {/* Botón siguiente */}
+    <button onClick={next} className="btn-next" style={{ marginTop: '1rem' }}>
+      Siguiente
+    </button>
+
+    <button onClick={volverAlMenu} className="btn-return" style={{ marginTop: '1rem' }}>
+      Volver
+    </button>
+  </div>
+);
