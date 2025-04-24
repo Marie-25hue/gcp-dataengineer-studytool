@@ -13,15 +13,15 @@ export default function ExamMode() {
     setTimeLeft((prevTime) => {
       if (prevTime <= 1) {
         clearInterval(timer);
-        finishExam(true); // pasamos un flag indicando que terminó por tiempo
+        finishExam(true);
         return 0;
       }
       return prevTime - 1;
     });
   }, 1000);
 
-  return () => clearInterval(timer);
-  }, []);
+  return () => clearInterval(timer); // limpia si el componente se desmonta
+}, []); // OJO: los corchetes vacíos son clave para que corra una sola vez
 
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
