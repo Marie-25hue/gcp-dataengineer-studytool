@@ -35,6 +35,8 @@ export default function StudyMode() {
     <p style={{ fontSize: '0.95rem', marginBottom: '0.5rem', color: '#555' }}>
   Pregunta {current + 1} de {questions.length}
 </p>
+  <div className="fade-in" key={current}>
+  <p style={{ fontWeight: 'bold' }}>
       <p>{questions[current].question}</p>
       {questions[current].options.map((opt) => {
         let style = {};
@@ -59,6 +61,7 @@ export default function StudyMode() {
           </button>
         );
       })}
+    </div>
       <br />
       <button onClick={next} className="btn-next" disabled={!showAnswer}>
         Siguiente
