@@ -63,6 +63,14 @@ export default function ExamMode() {
       <p style={{ fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
   Este es el modo examen. Responde sin pistas. Al final verás tu puntaje. ¡Buena suerte!
    </p>
+    <div className="progress-container">
+  <div
+    className="progress-bar"
+    style={{
+      width: ${((current + 1) / questions.length) * 100}%
+    }}
+  ></div>
+</div>
       <p>{questions[current].question}</p>
       {questions[current].options.map((opt) => {
         let style = {};
