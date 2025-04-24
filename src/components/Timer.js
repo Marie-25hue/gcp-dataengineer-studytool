@@ -5,7 +5,7 @@ export default function StudyMode() {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState(null);
   const [showAnswer, setShowAnswer] = useState(false);
-
+ 
   const handleSelect = (option) => {
     setSelected(option);
     setShowAnswer(true);
