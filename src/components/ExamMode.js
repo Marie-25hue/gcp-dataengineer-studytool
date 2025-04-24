@@ -63,6 +63,9 @@ export default function ExamMode() {
       <p style={{ fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
   Este es el modo examen. Responde sin pistas. Al final verás tu puntaje. ¡Buena suerte!
    </p>
+    <p style={{ fontSize: '0.95rem', marginBottom: '0.5rem', color: '#555' }}>
+  Pregunta {current + 1} de {questions.length}
+  </p>
       <p>{questions[current].question}</p>
       {questions[current].options.map((opt) => {
         let style = {};
