@@ -53,8 +53,8 @@ export default function ExamMode() {
   };
 
   const finishExam = () => {
-    alert(`Examen finalizado.\nTu puntaje es ${score} de ${questions.length}`);
-    window.location.reload();
+   alert(`Examen finalizado.\nTu puntaje es ${score} de ${questions.length}`);
+window.location.reload();
   };
 
   return (
