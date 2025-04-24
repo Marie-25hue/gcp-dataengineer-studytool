@@ -107,14 +107,16 @@ body {
   font-size: 1rem;
   border: none;
   border-radius: 8px;
-  background-color: #007bff;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .quiz-card button:hover {
-  background-color: #0056b3;
+  background: linear-gradient(to right, #00f2fe, #4facfe);
+  transform: scale(1.02);
 }
 
 .btn-next,
