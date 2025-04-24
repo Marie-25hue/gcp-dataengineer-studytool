@@ -35,9 +35,9 @@ export default function StudyMode() {
     <div className="progress-container">
   <div
     className="progress-bar"
-    style={{
-      width: ${((current + 1) / questions.length) * 100}%
-    }}
+   style={{
+  width: ${((current + 1) / questions.length) * 100}%
+}}
   ></div>
 </div>
       <p>{questions[current].question}</p>
