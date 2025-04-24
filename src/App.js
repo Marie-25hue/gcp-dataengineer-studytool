@@ -1,75 +1,40 @@
-import React, { useEffect, useState } from 'react';
+// src/App.js import React, { useState } from 'react'; import StudyMode from './components/StudyMode'; import ExamMode from './components/ExamMode';
 
-export default function QuizApp() {
-  const [preguntas, setPreguntas] = useState([]);
-  const [indiceActual, setIndiceActual] = useState(0);
-  const [respuestaSeleccionada, setRespuestaSeleccionada] = useState(null);
-  const [respuestaCorrecta, setRespuestaCorrecta] = useState(false);
-  const [puntaje, setPuntaje] = useState(0);
+export default function App() { const [mode, setMode] = useState(null); const [lang, setLang] = useState('es');
 
-  useEffect(() => {
-    fetch('/quizData.json')
-      .then(res => res.json())
-      .then(data => setPreguntas(data));
-  }, []);
+const t = { es: { title: 'GCP Certification Quiz App', choose: 'Elige un modo para comenzar:', study: '🧠 Modo Estudio', exam: '📝 Modo Examen', back: '⬅ Volver', language: 'Idioma' }, en: { title: 'GCP Certification Quiz App', choose: 'Choose a mode to begin:', study: '🧠 Study Mode', exam: '📝 Exam Mode', back: '⬅ Back', language: 'Language' } };
 
-  if (!preguntas.length) return <p className="p-4">Cargando preguntas...</p>;
+return ( <div style={{ padding: '2rem', fontFamily: 'Arial, sans-serif' }}> <h1>{t[lang].title}</h1>
 
-  const preguntaActual = preguntas[indiceActual];
+<div style={{ marginBottom: '1rem' }}>
+    <label>{t[lang].language}:</label>
+    <select value={lang} onChange={(e) => setLang(e.target.value)}>
+      <option value="es">Español</option>
+      <option value="en">English</option>
+    </select>
+  </div>
 
-  const handleRespuesta = (opcion) => {
-    setRespuestaSeleccionada(opcion);
-    const esCorrecta = opcion === preguntaActual.respuestaCorrecta;
-    setRespuestaCorrecta(esCorrecta);
-    if (esCorrecta) setPuntaje(p => p + 1);
-  };
-
-  const siguientePregunta = () => {
-    setRespuestaSeleccionada(null);
-    setRespuestaCorrecta(false);
-    setIndiceActual(indiceActual + 1);
-  };
-
-  return (
-    <div className="p-4 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Quiz GCP Data Engineer</h1>
-      {indiceActual < preguntas.length ? (
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-lg font-semibold mb-2">{preguntaActual.pregunta}</h2>
-          <div className="space-y-2">
-            {preguntaActual.opciones.map((opcion) => (
-              <button
-                key={opcion}
-                onClick={() => handleRespuesta(opcion)}
-                className={\`w-full text-left p-2 rounded border \${respuestaSeleccionada === opcion ? (respuestaCorrecta ? 'border-green-500' : 'border-red-500') : 'border-gray-300'}\`}
-              >
-                {opcion}
-              </button>
-            ))}
-          </div>
-          {respuestaSeleccionada && (
-            <div className="mt-4">
-              <p className={\`font-medium \${respuestaCorrecta ? 'text-green-600' : 'text-red-600'}\`}>
-                {respuestaCorrecta ? '¡Correcto!' : 'Incorrecto'}
-              </p>
-              <p className="text-sm text-gray-700 mt-1">{preguntaActual.explicacion}</p>
-              {respuestaCorrecta && (
-                <button
-                  onClick={siguientePregunta}
-                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Siguiente
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="text-center mt-8">
-          <h2 className="text-xl font-bold text-green-700">¡Quiz completado!</h2>
-          <p className="mt-2 text-gray-700">Puntaje final: {puntaje} / {preguntas.length}</p>
-        </div>
-      )}
+  {!mode && (
+    <div>
+      <p>{t[lang].choose}</p>
+      <button onClick={() => setMode('study')}>{t[lang].study}</button>
+      <button onClick={() => setMode('exam')}>{t[lang].exam}</button>
     </div>
-  );
-}
+  )}
+
+  {mode === 'study' && (
+    <>
+      <StudyMode />
+      <button onClick={() => setMode(null)}>{t[lang].back}</button>
+    </>
+  )}
+
+  {mode === 'exam' && (
+    <>
+      <ExamMode />
+      <button onClick={() => setMode(null)}>{t[lang].back}</button>
+    </>
+  )}
+</div>
+
+); }
