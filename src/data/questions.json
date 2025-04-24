@@ -1,0 +1,52 @@
+[
+  {
+    "question": "¿Qué es una base de datos relacional?",
+    "options": [
+      "Conjunto de tablas relacionadas",
+      "Archivo de texto plano",
+      "Una red social",
+      "Un servidor web"
+    ],
+    "answer": "Conjunto de tablas relacionadas"
+  },
+  {
+    "question": "¿Qué hace un SELECT en SQL?",
+    "options": [
+      "Selecciona datos",
+      "Borra datos",
+      "Actualiza datos",
+      "Inserta datos"
+    ],
+    "answer": "Selecciona datos"
+  },
+  {
+    "question": "¿Qué lenguaje se utiliza para estructurar documentos web?",
+    "options": [
+      "HTML",
+      "Python",
+      "C++",
+      "Photoshop"
+    ],
+    "answer": "HTML"
+  },
+  {
+    "question": "¿Qué herramienta permite controlar versiones de código?",
+    "options": [
+      "Git",
+      "Excel",
+      "PowerPoint",
+      "Paint"
+    ],
+    "answer": "Git"
+  },
+  {
+    "question": "¿Qué significa JSON?",
+    "options": [
+      "JavaScript Object Notation",
+      "Java Standard Output Network",
+      "Joint Structure Of Nodes",
+      "Just Simple Object Naming"
+    ],
+    "answer": "JavaScript Object Notation"
+  }
+]
