@@ -30,20 +30,33 @@ export default function StudyMode() {
     <div>
       <h2>🧠 Modo Estudio</h2>
       <p>{questions[current].question}</p>
-      {questions[current].options.map((opt) => (
-        <button
-          key={opt}
-          onClick={() => handleSelect(opt)}
-          style={{
-            margin: '0.5rem',
-            backgroundColor:
-              showAnswer && opt === questions[current].answer ? 'lightgreen' : ''
-          }}
-        >
-          {opt}
-        </button>
-      ))}
-      <button onClick={next}>Siguiente</button>
+      {questions[current].options.map((opt) => {
+        let style = {};
+
+        if (showAnswer) {
+          if (opt === questions[current].answer) {
+            style.backgroundColor = 'lightgreen';
+          } else if (opt === selected) {
+            style.backgroundColor = '#ffb3b3'; // rojo clarito
+          }
+        }
+
+        return (
+          <button
+            key={opt}
+            onClick={() => handleSelect(opt)}
+            className="btn-answer"
+            style={style}
+            disabled={showAnswer}
+          >
+            {opt}
+          </button>
+        );
+      })}
+      <br />
+      <button onClick={next} className="btn-next" disabled={!showAnswer}>
+        Siguiente
+      </button>
     </div>
   );
-}
+        }
