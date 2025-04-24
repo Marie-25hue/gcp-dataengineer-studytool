@@ -45,7 +45,7 @@ export default function ExamMode() {
   }
 
   return (
-    <div>
+    <div className="quiz-card">
       <h2>📝 Modo Examen</h2>
       <p>{questions[current].question}</p>
       {questions[current].options.map((opt) => {
