@@ -32,6 +32,14 @@ export default function StudyMode() {
       <p style={{ fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
   Bienvenida al modo estudio. Elegí una opción y descubrí cuál es la respuesta correcta. ¡Sin presión, solo para aprender!
 </p>
+    <div className="progress-container">
+  <div
+    className="progress-bar"
+    style={{
+      width: ${((current + 1) / questions.length) * 100}%
+    }}
+  ></div>
+</div>
       <p>{questions[current].question}</p>
       {questions[current].options.map((opt) => {
         let style = {};
