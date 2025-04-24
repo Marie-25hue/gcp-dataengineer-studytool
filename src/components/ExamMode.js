@@ -67,8 +67,8 @@ export default function ExamMode() {
   <div
     className="progress-bar"
     style={{
-      width: ${((current + 1) / questions.length) * 100}%
-    }}
+  width: ${((current + 1) / questions.length) * 100}%
+}}
   ></div>
 </div>
       <p>{questions[current].question}</p>
