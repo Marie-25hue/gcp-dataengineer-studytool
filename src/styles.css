@@ -45,14 +45,16 @@ div {
 .btn-answer {
   margin: 0.5rem;
   padding: 0.5rem 1rem;
-  background-color: #e0e0e0;
+  background-color: #cce5ff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  color: #003366;
+  font-weight: 500;
 }
 
 .btn-answer:hover {
-  background-color: #d5d5d5;
+  background-color: #99ccff;
 }
 
 .btn-next {
