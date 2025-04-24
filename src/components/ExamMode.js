@@ -35,14 +35,27 @@ export default function ExamMode() {
     }
   };
 
-  if (finished) {
-    return (
-      <div>
-        <h2>Resultado del Examen</h2>
-        <p>Obtuviste {score} de {questions.length} respuestas correctas.</p>
-      </div>
-    );
-  }
+ if (finished) {
+  return (
+    <div className="quiz-card">
+      <h2>Resultado del Examen</h2>
+      <p>Obtuviste {score} de {questions.length} respuestas correctas.</p>
+      <button
+        onClick={() => {
+          setCurrent(0);
+          setSelected(null);
+          setScore(0);
+          setShowAnswer(false);
+          setFinished(false);
+        }}
+        className="btn-next"
+        style={{ marginTop: '1rem' }}
+      >
+        Volver a empezar
+      </button>
+    </div>
+  );
+}
 
   return (
     <div className="quiz-card">
