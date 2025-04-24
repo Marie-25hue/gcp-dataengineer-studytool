@@ -93,7 +93,8 @@ div {
 
 .progress-bar {
   height: 100%;
+  min-width: 4%; /* Evita que la barra se vea como una rayita */
   background: linear-gradient(to right, #4facfe, #00f2fe);
-  border-radius: 10px 0 0 10px;
+  border-radius: 10px;
   transition: width 0.5s ease-in-out;
 }
