@@ -34,13 +34,12 @@ return (
       ¡Sin presión, solo para aprender!
     </p>
 
-    {/* Contador de pregunta */}
     <p style={{ fontSize: '0.95rem', marginBottom: '0.5rem', color: '#555' }}>
       Pregunta {current + 1} de {questions.length}
     </p>
 
-    {/* Pregunta + opciones */}
     <p style={{ fontWeight: 'bold' }}>{questions[current].question}</p>
+
     {questions[current].options.map((opt) => {
       let style = {};
       if (showAnswer) {
@@ -61,19 +60,17 @@ return (
       );
     })}
 
-    {/* Emoji respuesta */}
     {showAnswer && (
       <div style={{ fontSize: '2rem', marginTop: '1rem' }}>
         {selected === questions[current].answer ? '✅ ¡Correcto!' : '❌ Ups, no era esa'}
       </div>
     )}
 
-    {/* Botón siguiente */}
-    <button onClick={next} className="btn-next" style={{ marginTop: '1rem' }}>
+    <button onClick={next} style={{ marginTop: '1rem' }}>
       Siguiente
     </button>
 
-    <button onClick={volverAlMenu} className="btn-return" style={{ marginTop: '1rem' }}>
+    <button onClick={volverAlMenu} style={{ marginTop: '1rem' }}>
       Volver
     </button>
   </div>
