@@ -62,82 +62,69 @@ export default function ExamMode() {
    }, 300);
    };
 
-  return (
-    <div className="quiz-card fade-in" key={current}>
-      <div style={{ textAlign: 'right', fontWeight: 'bold', color: '#444' }}>
-        Tiempo restante: {formatTime(timeLeft)}
-      </div>
+ return (
+  <div className="quiz-card fade-in" key={current}>
+    <div style={{ textAlign: 'right', fontWeight: 'bold', color: '#444' }}>
+      Tiempo restante: {formatTime(timeLeft)}
+    </div>
 
-      <h2>📝 Modo Examen</h2>
-      <p style={{ fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
-        Responde sin pistas. Al final verás tu puntaje. ¡Buena suerte!
-      </p>
+    <h2>📝 Modo Examen</h2>
+    <p style={{ fontStyle: 'italic', fontSize: '1.1rem', marginBottom: '1rem' }}>
+      Responde sin pistas. Al final verás tu puntaje. ¡Buena suerte!
+    </p>
 
-      <p style={{ fontSize: '0.95rem', marginBottom: '0.5rem', color: '#555' }}>
-        Pregunta {current + 1} de {questions.length}
-      </p>
+    {!examFinished ? (
+      <>
+        <p style={{ fontSize: '0.95rem', marginBottom: '0.5rem', color: '#555' }}>
+          Pregunta {current + 1} de {questions.length}
+        </p>
 
-      <p style={{ fontWeight: 'bold' }}>{questions[current].question}</p>
+        <p style={{ fontWeight: 'bold' }}>{questions[current].question}</p>
 
-      {/* Opciones de respuesta */}
-      <div style={{ marginTop: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
-        {questions[current].options.map((opt, index) => (
+        {questions[current].options.map((opt) => (
           <button
-            key={index}
-            onClick={() => handleSelect(questions[current].options[index])}
+            key={opt}
+            onClick={() => setSelected(opt)}
             style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: selected === questions[current].options[index] ? '#388e3c' : '#00bcd4',
-            border: selected === questions[current].options[index] ? '2px solid #2e7d32' : 'none',
-            transform: selected === questions[current].options[index] ? 'scale(1.05)' : 'scale(1)',
-            boxShadow: selected === questions[current].options[index] ? '0 0 10px #2e7d32' : 'none',
-            color: '#fff',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            minWidth: '200px',
-            transition: 'background-color 0.3s ease',
+              margin: '0.5rem',
+              backgroundColor: selected === opt ? '#cce5ff' : '',
             }}
           >
             {opt}
           </button>
         ))}
-      </div>
 
-      {/* Botones de navegación */}
-      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
         <button
-          onClick={next}
-          disabled={!selected}
-          style={{
-            padding: '0.6rem 1.5rem',
-            backgroundColor: selected ? '#4caf50' : '#a5d6a7',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            fontWeight: 'bold',
-            cursor: selected ? 'pointer' : 'not-allowed',
-            transition: 'all 0.3s',
+          onClick={() => {
+            if (selected === questions[current].answer) {
+              setScore((prev) => prev + 1);
+            }
+            if (current + 1 === questions.length) {
+              finishExam();
+            } else {
+              setCurrent((prev) => prev + 1);
+              setSelected(null);
+            }
           }}
+          className="btn-next"
+          style={{ marginTop: '1rem' }}
+          disabled={!selected}
         >
           Siguiente
         </button>
-
-        <button
-          onClick={volverAlMenu}
-          style={{
-            padding: '0.6rem 1.5rem',
-            backgroundColor: '#9e9e9e',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            transition: 'all 0.3s',
-          }}
-        >
-          Volver
-        </button>
+      </>
+    ) : (
+      <div style={{ marginTop: '2rem' }}>
+        <h3>Examen finalizado</h3>
+        <p>Tu puntaje es {score} de {questions.length}</p>
       </div>
+    )}
+
+    {/* Solo UN botón Volver */}
+    <div style={{ marginTop: '2rem' }}>
+      <button onClick={() => window.location.href = '/'} className="btn-return">
+        Volver
+      </button>
     </div>
-  );
-}
+  </div>
+);
