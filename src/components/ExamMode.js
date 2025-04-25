@@ -128,3 +128,4 @@ export default function ExamMode() {
     </div>
   </div>
 );
+}
