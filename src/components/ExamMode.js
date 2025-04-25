@@ -8,7 +8,6 @@ export default function ExamMode() {
   const [timeLeft, setTimeLeft] = useState(7200); // 120 minutos
   const [examFinished, setExamFinished] = useState(false);
 
-  // Temporizador
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
@@ -20,7 +19,6 @@ export default function ExamMode() {
         return prevTime - 1;
       });
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
@@ -46,6 +44,10 @@ export default function ExamMode() {
     setExamFinished(false);
   };
 
+  const handleSelect = (option) => {
+    setSelected(option);
+  };
+
   return (
     <div className="quiz-card fade-in" key={current}>
       <div style={{ textAlign: 'right', fontWeight: 'bold', color: '#444' }}>
@@ -65,13 +67,21 @@ export default function ExamMode() {
 
           <p style={{ fontWeight: 'bold' }}>{questions[current].question}</p>
 
-          {questions[current].options.map((opt) => (
+          {questions[current].options.map((opt, index) => (
             <button
-              key={opt}
-              onClick={() => setSelected(opt)}
+              key={index}
+              onClick={() => handleSelect(questions[current].options[index])}
               style={{
-                margin: '0.5rem',
-                backgroundColor: selected === opt ? '#cce5ff' : '',
+                padding: '0.5rem 1rem',
+                backgroundColor: selected === questions[current].options[index] ? '#388e3c' : '#00bcd4',
+                border: selected === questions[current].options[index] ? '2px solid #2e7d32' : 'none',
+                transform: selected === questions[current].options[index] ? 'scale(1.05)' : 'scale(1)',
+                boxShadow: selected === questions[current].options[index] ? '0 0 10px #2e7d32' : 'none',
+                color: '#fff',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                minWidth: '200px',
+                transition: 'all 0.3s ease'
               }}
             >
               {opt}
@@ -98,18 +108,16 @@ export default function ExamMode() {
           </button>
         </>
       ) : (
-        <>
-          <div style={{ marginTop: '2rem' }}>
-            <h3>¡Examen completado!</h3>
-            <p>Tu puntaje: {score} de {questions.length}</p>
-            <button onClick={resetExam} style={{ marginRight: '1rem' }}>
-              Volver a intentar
-            </button>
-            <button onClick={volverAlMenu}>
-              Volver al menú
-            </button>
-          </div>
-        </>
+        <div style={{ marginTop: '2rem' }}>
+          <h3>¡Examen completado!</h3>
+          <p>Tu puntaje: {score} de {questions.length}</p>
+          <button onClick={resetExam} style={{ marginRight: '1rem' }}>
+            Volver a intentar
+          </button>
+          <button onClick={volverAlMenu}>
+            Volver al menú
+          </button>
+        </div>
       )}
     </div>
   );
