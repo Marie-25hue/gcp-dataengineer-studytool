@@ -104,6 +104,7 @@ export default function ExamMode() {
             style={{ marginTop: '1rem' }}
             disabled={!selected}
           >
+            <hr style={{ marginTop: '2rem', marginBottom: '1rem' }} />
             {current + 1 === questions.length ? 'Finalizar' : 'Siguiente'}
           </button>
         </>
