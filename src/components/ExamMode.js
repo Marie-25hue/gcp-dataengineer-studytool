@@ -6,7 +6,8 @@ export default function ExamMode() {
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(7200); // 120 minutos en segundos
-
+  const [examFinished, setExamFinished] = useState(false);
+  
   // Temporizador
   useEffect(() => {
   const timer = setInterval(() => {
