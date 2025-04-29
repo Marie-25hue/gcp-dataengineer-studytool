@@ -14,7 +14,8 @@
 
 ## 🌐 Live Demo / Demostración en vivo
 
-[**▶️ Launch App on Vercel**](https://gcp-quiz.vercel.app)
+[**▶️ Launch App on Vercel**](https://gcp-dataengineer-studytool.vercel.app/)
+
 
 ---
 
