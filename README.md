@@ -15,18 +15,6 @@
 
 [**▶️ Launch App on Vercel**](https://gcp-dataengineer-studytool.vercel.app/)
 
-<<<<<<< HEAD
-=======
-
----
-
-## 🖼️ App Preview / Vista previa
-
-<img src="gcp-quiz-banner.png" alt="App Banner" width="100%"/>
-
-<img src="quiz-loader.gif" alt="Loading Animation" width="300"/>
-
->>>>>>> 28a552905cfbc5cc00988ad637fba56f76ee7d24
 ---
 
 ## ✨ Features / Características
