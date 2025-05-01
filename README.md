@@ -112,8 +112,6 @@ Consultá las pautas en [CONTRIBUTING.md](https://github.com/Marie-25hue/gcp-dat
 
 ---
 
----
-
 ## 🛟 Support / Soporte
 
 ¿Encontraste un bug o querés proponer una mejora?
