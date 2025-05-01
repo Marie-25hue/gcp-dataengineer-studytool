@@ -1,139 +1,124 @@
-# GCP Certification Quiz App  
-*A bilingual quiz app to prepare for the Google Cloud Professional Data Engineer exam.*  
-*Una aplicación bilingüe para prepararse para la certificación GCP Data Engineer.*
+# 🎓 GCP Data Engineer Study Tool
 
-![Status](https://img.shields.io/badge/status-active-brightgreen)
-![License: MIT](https://img.shields.io/badge/license-MIT-blue)
-![Built with React](https://img.shields.io/badge/built%20with-React-61DAFB?logo=react)
-![Hosted on Vercel](https://img.shields.io/badge/hosted%20on-Vercel-black?logo=vercel)
-![Questions Ready](https://img.shields.io/badge/questions-100-orange)
-![Coverage](https://img.shields.io/badge/coverage-85%25-green)
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+![Made With React](https://img.shields.io/badge/Built%20with-React-61DAFB?logo=react)
+![Status](https://img.shields.io/badge/status-en%20desarrollo-yellow)
+![Powered by AI](https://img.shields.io/badge/AI%20Powered-yes-ff69b4)
 
----
-
-## 🌐 Live Demo / Demostración en vivo
-
-[**▶️ Launch App on Vercel**](https://gcp-dataengineer-studytool.vercel.app/)
+Aplicación interactiva para practicar preguntas del examen **Google Cloud Professional Data Engineer**, con modos dinámicos, cronómetro, puntaje y más funcionalidades diseñadas para una experiencia de estudio moderna, práctica y progresiva.
 
 ---
 
-## ✨ Features / Características
+## 🚀 Demo
 
-### Core Functionality
+▶️ [Probar la app en Vercel](https://gcp-dataengineer-studytool.vercel.app/)
 
-- 📚 **100+ exam-style questions** in JSON
-- 🎯 **Two modes**: Study (retry) & Exam (timed)
-- ⏱️ Timer and score tracking
-- 🧠 Immediate feedback & explanations
-- 🌐 Bilingual (English / Español)
-- 📱 Fully responsive UI
-- 📊 Score log
-
-### Funcionalidad principal
-
-- 📚 **100+ preguntas tipo examen** en JSON
-- 🎯 **Dos modos**: Estudio (reintento) y Examen (tiempo)
-- ⏱️ Temporizador y puntuación
-- 🧠 Feedback inmediato y explicaciones
-- 🌐 Bilingüe (Inglés / Español)
-- 📱 Interfaz adaptable
-- 📊 Historial de resultados
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/Marie-25hue/gcp-dataengineer-studytool)
 
 ---
 
-## 🛠️ Tech Stack / Tecnologías
+## 🧠 Funcionalidades actuales
 
-- **Lenguaje / Language:** JavaScript
-- **Framework:** React
-- **Routing:** React Router DOM
-- **Estilos / Styles:** CSS
-- **Despliegue / Deployment:** Vercel
-- **Formato de datos / Data Format:** JSON
+- 📋 45 preguntas tipo examen cargadas actualmente.  
+  *(El set completo de 100 preguntas será entregado en breve o por correo directo.)*
+- 🎓 **Dos modos de uso**:
+  - **Modo Estudio**: sin límite de tiempo, con feedback inmediato.
+  - **Modo Examen**: incluye temporizador y puntaje automático.
+- ⏱️ Temporizador funcional en modo examen.
+- 🧮 Visualización de puntaje final.
 
 ---
 
-## ⚙️ Quick Start / Inicio rápido
+## 🚧 Funcionalidades en desarrollo (versión extendida)
 
-### 📥 Clone the repository / Clonar repositorio
+- 🔁 Reintento de preguntas fallidas.
+- 💬 Feedback inmediato también en el modo examen.
+- 🌐 Interfaz bilingüe (Español / Inglés).
+- 🌙 Modo oscuro y diseño responsive.
+- 📈 Historial de resultados por sesión.
+- 🎯 Sugerencias de estudio adaptadas al desempeño.
+- 🏆 Sistema de badges por logros.
+
+---
+
+## 📦 Instalación local
 
 ```bash
-
 git clone https://github.com/Marie-25hue/gcp-dataengineer-studytool.git
 cd gcp-dataengineer-studytool
-
-```
-
-### 📦 Install dependencies / Instalar dependencias
-
-```bash
 npm install
-```
-
-### ▶️ Run locally / Ejecutar en local
-
-```bash
-npm start
-```
-
-### ✅ Run tests / Ejecutar tests
-
-```bash
-npm test
-```
-
-### 🏗️ Build for production / Build para producción
-
-```bash
-npm run build
+npm run dev
 ```
 
 ---
 
-## 🚀 Deployment / Despliegue
+## 📂 Estructura del proyecto
 
-Deploy con Vercel:
-
-```bash
-vercel --prod
+```plaintext
+├── public/
+│   └── index.html
+├── src/
+│   ├── components/
+│   │   ├── ExamMode.js
+│   │   ├── StudyMode.js
+│   │   └── Timer.js
+│   ├── data/
+│   │   └── questions.json
+├── App.js
+├── styles.css
+├── .gitignore
+├── CONTRIBUTING.md
+├── LICENSE.bin
+├── README.md
+├── gcp-quiz-banner.png
+├── package-lock.json
+├── package.json
 ```
 
-O hacé click en:
+---
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project)
+## 👩‍💻 Tecnologías utilizadas
+
+- ⚛️ React + Vite para desarrollo frontend moderno
+- 📜 JavaScript (ES6+) como lenguaje principal
+- 🎨 HTML + CSS puro para estructura y estilos
+- 📊 JSON como formato dinámico para carga de preguntas
+- 🤖 Apoyo puntual de herramientas de IA (ChatGPT, Gemini, Perplexity) para generación y validación de contenido teórico
+- 💻 Todo el desarrollo, estructura y lógica de la aplicación fue realizado manualmente
 
 ---
 
-## 🤝 Contributing / Contribuciones
+## 📜 Licencia
 
-**We welcome contributions!**  
-**¡Agradecemos contribuciones!**
-
-1. Fork this repo / Haz un fork  
-2. Create your feature branch / Crea tu rama  
-3. Commit your changes / Hacé commit  
-4. Push and open a PR / Subí y abrí un Pull Request  
-
-Check `CONTRIBUTING.md` for more details.  
-Consulta `CONTRIBUTING.md` para más detalles.
+Este proyecto está licenciado bajo MIT.  
+Ver archivo [LICENSE](https://github.com/Marie-25hue/gcp-dataengineer-studytool/blob/main/LICENSE) para más detalles.
 
 ---
 
-## 📄 License / Licencia
+## 🤝 Contribuciones
 
-**MIT License**  
-Libre para usar, modificar y compartir.  
-See LICENSE for full details.
+¿Querés aportar ideas o sugerencias?  
+Consultá las pautas en [CONTRIBUTING.md](https://github.com/Marie-25hue/gcp-dataengineer-studytool/blob/main/CONTRIBUTING.md)
+
+---
+
+## 📈 Estado del proyecto
+
+- ✅ Versión base funcional
+- 🚧 Desarrollo activo
+- 📆 Próxima actualización: versión extendida con mejoras pedagógicas
+- 💬 Se reciben sugerencias para seguir evolucionando
+
+---
 
 ---
 
 ## 🛟 Support / Soporte
 
-Found a bug or want to suggest an improvement?  
 ¿Encontraste un bug o querés proponer una mejora?
 
-[➡️ Open an Issue](https://github.com/Marie-25hue/gcp-dataengineer-studytool/issues)
+➡️ [Abrí un Issue](https://github.com/Marie-25hue/gcp-dataengineer-studytool/issues)
 
----
-
-> 🚧 Esta es la versión base estable. La versión extendida con historial, badges, y feedback personalizado está en desarrollo.
-
+🚧 Esta es la **versión base estable**.  
+La versión extendida con historial, badges y feedback personalizado está en desarrollo activo.
