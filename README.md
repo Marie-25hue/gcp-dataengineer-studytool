@@ -7,6 +7,10 @@
 ![Built with React](https://img.shields.io/badge/built%20with-React-61DAFB?logo=react)
 ![Hosted on Vercel](https://img.shields.io/badge/hosted%20on-Vercel-black?logo=vercel)
 ![Questions Ready](https://img.shields.io/badge/questions-100-orange)
+<<<<<<< HEAD
+=======
+![Build](https://img.shields.io/github/actions/workflow/status/your-username/gcp-certification-quiz-app/main.yml?label=build)
+>>>>>>> 28a552905cfbc5cc00988ad637fba56f76ee7d24
 ![Coverage](https://img.shields.io/badge/coverage-85%25-green)
 
 ---
@@ -15,6 +19,18 @@
 
 [**▶️ Launch App on Vercel**](https://gcp-dataengineer-studytool.vercel.app/)
 
+<<<<<<< HEAD
+=======
+
+---
+
+## 🖼️ App Preview / Vista previa
+
+<img src="gcp-quiz-banner.png" alt="App Banner" width="100%"/>
+
+<img src="quiz-loader.gif" alt="Loading Animation" width="300"/>
+
+>>>>>>> 28a552905cfbc5cc00988ad637fba56f76ee7d24
 ---
 
 ## ✨ Features / Características
@@ -57,11 +73,16 @@
 ### 📥 Clone the repository / Clonar repositorio
 
 ```bash
+<<<<<<< HEAD
 
 git clone https://github.com/Marie-25hue/gcp-dataengineer-studytool.git
 cd gcp-dataengineer-studytool
 
 
+=======
+git clone https://github.com/your-username/gcp-certification-quiz-app.git
+cd gcp-certification-quiz-app
+>>>>>>> 28a552905cfbc5cc00988ad637fba56f76ee7d24
 ```
 
 ### 📦 Install dependencies / Instalar dependencias
@@ -132,8 +153,10 @@ See LICENSE for full details.
 Found a bug or want to suggest an improvement?  
 ¿Encontraste un bug o querés proponer una mejora?
 
+<<<<<<< HEAD
 [➡️ Open an Issue](https://github.com/Marie-25hue/gcp-dataengineer-studytool/issues)
 
 ---
 
 > 🚧 Esta es la versión base estable. La versión extendida con historial, badges, y feedback personalizado está en desarrollo.
+
