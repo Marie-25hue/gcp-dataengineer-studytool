@@ -44,8 +44,20 @@ export default function ExamMode() {
     setExamFinished(false);
   };
 
-  const handleSelect = (option) => {
-    setSelected(option);
+  const handleSelect = (index) => {
+    setSelected(index);
+  };
+
+  const handleNext = () => {
+    if (selected === questions[current].correctIndex) {
+      setScore((prev) => prev + 1);
+    }
+    if (current + 1 === questions.length) {
+      finishExam();
+    } else {
+      setCurrent((prev) => prev + 1);
+      setSelected(null);
+    }
   };
 
   return (
@@ -70,13 +82,13 @@ export default function ExamMode() {
           {questions[current].options.map((opt, index) => (
             <button
               key={index}
-              onClick={() => handleSelect(questions[current].options[index])}
+              onClick={() => handleSelect(index)}
               style={{
                 padding: '0.5rem 1rem',
-                backgroundColor: selected === questions[current].options[index] ? '#388e3c' : '#00bcd4',
-                border: selected === questions[current].options[index] ? '2px solid #2e7d32' : 'none',
-                transform: selected === questions[current].options[index] ? 'scale(1.05)' : 'scale(1)',
-                boxShadow: selected === questions[current].options[index] ? '0 0 10px #2e7d32' : 'none',
+                backgroundColor: selected === index ? '#388e3c' : '#00bcd4',
+                border: selected === index ? '2px solid #2e7d32' : 'none',
+                transform: selected === index ? 'scale(1.05)' : 'scale(1)',
+                boxShadow: selected === index ? '0 0 10px #2e7d32' : 'none',
                 color: '#fff',
                 borderRadius: '8px',
                 cursor: 'pointer',
@@ -87,22 +99,13 @@ export default function ExamMode() {
               {opt}
             </button>
           ))}
-      <hr style={{ marginTop: '2rem', marginBottom: '1rem' }} />
+
+          <hr style={{ marginTop: '2rem', marginBottom: '1rem' }} />
           <button
-            onClick={() => {
-              if (selected === questions[current].answer) {
-                setScore((prev) => prev + 1);
-              }
-              if (current + 1 === questions.length) {
-                finishExam();
-              } else {
-                setCurrent((prev) => prev + 1);
-                setSelected(null);
-              }
-            }}
+            onClick={handleNext}
             className="btn-next"
             style={{ marginTop: '1rem' }}
-            disabled={!selected}
+            disabled={selected === null}
           >
             {current + 1 === questions.length ? 'Finalizar' : 'Siguiente'}
           </button>

@@ -1,496 +1,497 @@
 [
     {
-        "question": "Pregunta 1: Estás diseñando un pipeline de datos en Dataflow que procesa datos de telemetría de dispositivos IoT. Necesitas enriquecer estos datos en tiempo real con información de perfil de usuario almacenada en Cloud Bigtable para personalizar alertas. ¿Cuál es el enfoque más eficiente y de menor latencia para realizar este enriquecimiento dentro de Dataflow?",
-        "options": [
-            "a) Usar una transformación ParDo que realice lecturas directas a Bigtable para cada elemento.",
-            "b) Cargar los perfiles relevantes en una vista lateral (side input) de Dataflow y realizar un lookup.",
-            "c) Escribir los datos de telemetría a Pub/Sub y usar una Cloud Function para enriquecerlos desde Bigtable.",
-            "d) Usar BigQuery como lookup leyendo la tabla de perfiles directamente desde Dataflow."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Si bien realizar lecturas directas a Bigtable con un ParDo es una opción, cargar los perfiles relevantes en una vista lateral (side input) es generalmente el enfoque más eficiente y de menor latencia para enriquecer un stream grande de datos con un conjunto de datos de referencia relativamente pequeño que cabe en la memoria de los workers de Dataflow. Esto evita realizar una búsqueda por cada elemento del stream principal, lo que puede generar una latencia significativamente mayor y ejercer más presión sobre Bigtable. La vista lateral se carga una vez por worker."
-    },
-    {
-        "question": "Pregunta 2: Tu equipo ha entrenado un modelo de clasificación de texto usando Vertex AI Custom Training. Quieres desplegar este modelo para predicciones online con baja latencia y necesitas que escale automáticamente según la demanda. ¿Qué opción de despliegue en Vertex AI es la más adecuada?",
-        "options": [
-            "a) Vertex AI Batch Prediction job.",
-            "b) Desplegar el modelo en un Vertex AI Endpoint con escalado automático configurado.",
-            "c) Exportar el modelo y servirlo desde una instancia de Compute Engine con un balanceador de carga.",
-            "d) Usar BigQuery ML para importar y servir el modelo."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Vertex AI Endpoints está diseñado específicamente para servir modelos de ML para predicciones online (en tiempo real), ofreciendo escalado automático basado en el tráfico y gestión integrada. Batch Prediction es para inferencia asíncrona sobre grandes datasets. Servir manualmente desde GCE requiere gestionar la infraestructura y el escalado. BigQuery ML sirve modelos entrenados dentro de BQ, no modelos personalizados de Vertex AI directamente para predicción online de baja latencia."
-    },
-    {
-        "question": "Pregunta 3: Necesitas migrar un data warehouse on-premises de 50 TB a BigQuery. La migración debe completarse en una ventana de tiempo limitada y con mínima interrupción. Los datos están actualmente en formato CSV. ¿Qué combinación de servicios y herramientas de GCP es la más apropiada para esta tarea?",
-        "options": [
-            "a) Usar gsutil para subir los CSV a Cloud Storage y luego bq load desde GCS.",
-            "b) Utilizar Storage Transfer Service para mover los CSV a Cloud Storage y luego BigQuery Data Transfer Service para cargar los datos.",
-            "c) Usar Transfer Appliance para enviar físicamente los datos a Google, cargarlos en GCS y luego bq load.",
-            "d) Configurar una conexión VPN o Interconnect y usar Dataflow para leer los CSV on-premises y escribirlos en BigQuery."
-        ],
-        "answer": "Respuesta correcta: c",
-        "explanation": "Explicación: Para una migración inicial de 50 TB en una ventana de tiempo limitada y con mínima interrupción, el Transfer Appliance suele ser la opción más adecuada. 50 TB ya es una cantidad considerable de datos donde la transferencia a través de la red podría llevar mucho tiempo y ser susceptible a interrupciones. Storage Transfer Service es excelente, pero para grandes volúmenes iniciales, el envío físico puede ser más rápido y confiable, especialmente si el ancho de banda de red es limitado. Una vez los datos están en GCS, bq load es el método eficiente para llevarlos a BigQuery."
-    },
-    {
-        "question": "Pregunta 4: Estás construyendo un pipeline de Dataflow en modo streaming que consume mensajes de Pub/Sub. El pipeline realiza agregaciones basadas en ventanas de tiempo. Quieres asegurar que los datos que llegan tarde (late data) sean procesados y actualicen los resultados previamente calculados. ¿Qué configuración de windowing y triggering deberías usar?",
-        "options": [
-            "a) Ventanas fijas (Fixed windows) con el trigger por defecto.",
-            "b) Ventanas deslizantes (Sliding windows) con un trigger AfterWatermark.",
-            "c) Ventanas de sesión (Session windows) con un trigger AfterProcessingTime.",
-            "d) Ventanas fijas (Fixed windows) con un trigger AfterWatermark.pastEndOfWindow().withLateFirings(AfterCount(1)) y especificando AllowedLateness."
-        ],
-        "answer": "Respuesta correcta: d",
-        "explanation": "Explicación: Para manejar datos tardíos y actualizar resultados, necesitas configurar AllowedLateness en la ventana para permitir que elementos tardíos se incluyan. El trigger AfterWatermark.pastEndOfWindow() asegura que se emita un resultado inicial cuando la marca de agua pasa el final de la ventana. withLateFirings() permite que triggers adicionales (como AfterCount(1)) se disparen si llegan elementos tardíos dentro del período de latencia permitido, actualizando así los resultados."
-    },
-    {
-        "question": "Pregunta 5: (IA) Tu empresa quiere implementar un sistema de detección de anomalías en logs de aplicaciones en tiempo real. Los logs se envían a Pub/Sub. Quieres usar un modelo de ML para identificar patrones inusuales. ¿Qué combinación de servicios de GCP sería más efectiva para construir y operar este sistema?",
-        "options": [
-            "a) Dataflow para procesar logs, BigQuery ML para entrenar un modelo de K-means y predicción en batch.",
-            "b) Cloud Logging para ingestar logs, exportarlos a BigQuery, y usar un modelo de Vertex AI entrenado para predicción en batch.",
-            "c) Pub/Sub para ingesta, Dataflow para procesamiento en tiempo real, y un modelo de detección de anomalías desplegado en un Vertex AI Endpoint para predicción en tiempo real",
-            "d) Cloud Functions para procesar logs de Pub/Sub y llamar a la API de Cloud Natural Language para análisis de sentimiento."
-        ],
-        "answer": "Respuesta correcta: c",
-        "explanation": "Explicación: Para detección de anomalías en tiempo real, necesitas un pipeline de streaming. Pub/Sub + Dataflow es la combinación estándar para esto. Un modelo de ML (posiblemente entrenado en Vertex AI) desplegado en un Vertex AI Endpoint permite realizar predicciones de anomalías en tiempo real a medida que los datos fluyen por Dataflow. Las opciones de batch (a, b) no cumplen el requisito de tiempo real. La API de Natural Language (d) no está diseñada específicamente para detección de anomalías en logs."
-    },
-    {
-        "question": "Pregunta 6: Necesitas orquestar un workflow complejo que incluye tareas en Dataproc (Spark), BigQuery (SQL) y Vertex AI (entrenamiento de modelo). El workflow debe ejecutarse diariamente y tener capacidades de reintento y monitoreo. ¿Qué servicio de GCP es el más adecuado para esta orquestación?",
-        "options": [
-            "a) Cloud Scheduler + Cloud Functions",
-            "b) Cloud Composer (Airflow gestionado)",
-            "c) Vertex AI Pipelines",
-            "d) Cloud Build"
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Cloud Composer es el servicio de orquestación de workflows gestionado de GCP, basado en Apache Airflow. Está diseñado para manejar dependencias complejas entre tareas que involucran diferentes servicios de GCP como Dataproc, BigQuery y Vertex AI, ofreciendo programación, reintentos y monitoreo. Cloud Scheduler/Functions son para tareas más simples. Vertex AI Pipelines es específico para MLOps. Cloud Build es para CI/CD."
-    },
-    {
-        "question": "Pregunta 7: Estás almacenando datos de series temporales en BigQuery y frecuentemente consultas rangos de fechas específicos y filtras por un ID de dispositivo. ¿Cómo deberías diseñar la tabla para optimizar el rendimiento y el costo de estas consultas?",
-        "options": [
-            "a) Crear una tabla estándar sin ninguna optimización especial.",
-            "b) Particionar la tabla por la columna de timestamp (ej. diaria) y clusterizarla por la columna device_id.",
-            "c) Usar una tabla externa apuntando a archivos CSV en Cloud Storage.",
-            "d) Crear índices secundarios en las columnas de timestamp y device_id."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Particionar por la columna de tiempo (timestamp) permite a BigQuery escanear solo las particiones relevantes para el rango de fechas consultado, reduciendo drásticamente los datos procesados y el costo. Clusterizar por device_id organiza físicamente los datos dentro de cada partición por ese ID, mejorando el rendimiento de los filtros sobre esa columna. BigQuery no soporta índices secundarios tradicionales. Las tablas externas son generalmente más lentas."
-    },
-    {
-        "question": "Pregunta 8: (IA) Quieres entrenar un modelo de regresión en BigQuery ML para predecir el valor de vida del cliente (CLV) usando datos históricos de transacciones. Los datos contienen columnas con información personal identificable (PII) que no deben ser usadas directamente en el entrenamiento pero sí quieres retenerlas en la tabla original. ¿Cuál es la mejor práctica?",
-        "options": [
-            "a) Crear una vista (VIEW) que excluya las columnas PII y usarla en la sentencia CREATE MODEL.",
-            "b) Usar la opción TRANSFORM en CREATE MODEL para seleccionar explícitamente las características (features) deseadas, excluyendo las PII.",
-            "c) Aplicar enmascaramiento dinámico de datos a las columnas PII antes de ejecutar CREATE MODEL.",
-            "d) Usar Cloud DLP para anonimizar las columnas PII directamente en la tabla base antes del entrenamiento."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: La cláusula TRANSFORM dentro de CREATE MODEL en BigQuery ML permite realizar preprocesamiento y selección de características como parte de la sentencia de entrenamiento. Esto te permite elegir explícitamente las columnas a usar como features, excluyendo las PII, sin necesidad de crear vistas o modificar la tabla original. El enmascaramiento dinámico es para control de acceso en consultas, no para entrenamiento. Anonimizar con DLP es una opción válida, pero TRANSFORM es más directo dentro de BQML para la selección de características."
-    },
-    {
-        "question": "Pregunta 9: Tienes un pipeline de Dataflow que lee desde Pub/Sub y escribe en BigQuery. Durante picos de tráfico, observas que el data freshness (actualidad de los datos en BigQuery) aumenta significativamente, indicando retrasos. El número de workers de Dataflow parece estar escalando correctamente. ¿Cuál podría ser una causa común de este cuello de botella y cómo lo mitigarías?",
-        "options": [
-            "a) Límites de cuota de la API de Streaming Inserts de BigQuery. Mitigar solicitando un aumento de cuota.",
-            "b) Latencia alta en la red entre los workers de Dataflow y la API de BigQuery. Mitigar eligiendo una región más cercana.",
-            "c) El tópico de Pub/Sub no puede manejar la tasa de publicación. Mitigar  aumentando las particiones del tópico.",
-            "d) Transformaciones ineficientes en el pipeline de Dataflow. Mitigar optimizando el código del pipeline."
-        ],
-        "answer": "Respuesta correcta: d",
-        "explanation": "Explicación: Si el número de workers de Dataflow está escalando correctamente pero la data freshness disminuye en picos de tráfico, una causa común es transformaciones ineficientes dentro del pipeline de Dataflow que se convierten en cuellos de botella bajo mayor carga. Esto podría incluir operaciones costosas o una mala elección de transformaciones que no escalan bien. Si la cuota de BigQuery fuera el problema principal, probablemente verías errores relacionados con la cuota. Optimizar el código del pipeline para hacerlo más eficiente es la mitigación clave."
-    },
-    {
-        "question": "Pregunta 10: (IA) Estás desarrollando un modelo de recomendación para un sitio de e-commerce usando Vertex AI. Necesitas almacenar y servir características (features) precalculadas de usuarios y productos con baja latencia para la inferencia online. ¿Qué componente de Vertex AI deberías utilizar para gestionar y servir estas características?",
-        "options": [
-            "a) Vertex AI Model Registry",
-            "b) Vertex AI Feature Store",
-            "c) Vertex AI Matching Engine",
-            "d) Vertex AI TensorBoard"
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Vertex AI Feature Store está diseñado específicamente para almacenar, gestionar y servir características de ML con baja latencia, tanto para entrenamiento como para inferencia online. Permite desacoplar la generación de características del consumo, evitando la deriva entre entrenamiento y servicio (training-serving skew). Model Registry es para versiones de modelos, Matching Engine para búsqueda de similitud vectorial, y TensorBoard para visualización."
-    },
-    {
-        "question": "Pregunta 11: Necesitas configurar el acceso a un bucket de Cloud Storage para que un equipo específico de Data Scientists pueda leer y escribir objetos, pero no puedan eliminar el bucket ni cambiar sus permisos. Otro equipo de Data Analysts solo debe poder leer objetos. ¿Qué combinación de roles de IAM es la más apropiada siguiendo el principio de mínimo privilegio?",
-        "options": [
-            "a) Data Scientists: roles/storage.admin, Data Analysts: roles/storage.objectViewer.",
-            "b) Data Scientists: roles/storage.objectAdmin, Data Analysts: roles/storage.objectViewer.",
-            "c) Data Scientists: roles/storage.legacyBucketWriter, Data Analysts: roles/storage.legacyBucketReader.",
-            "d) Data Scientists: roles/storage.objectCreator y roles/storage.objectViewer, Data Analysts: rolesstorage.objectViewer."
-        ],
-        "answer": "Respuesta correcta: d",
-        "explanation": "Explicación: El rol roles/storage.objectAdmin permite eliminar objetos, lo cual no cumple con el requisito de que los Data Scientists no puedan eliminar el bucket ni sus permisos. La combinación más adecuada siguiendo el principio de mínimo privilegio sería: Data Scientists: roles/storage.objectCreator (para subir nuevos objetos) y roles/storage.objectViewer (para leer los objetos existentes). Esto les permite leer y escribir datos sin la capacidad de eliminar objetos o modificar los permisos del bucket.Data Analysts: roles/storage.objectViewer (solo para leer objetos)."
-    },
-    {
-        "question": "Pregunta 12: Estás operando un clúster de Dataproc para trabajos ETL de Spark. Quieres optimizar los costos asegurándote de que el clúster escale hacia abajo cuando no esté en uso activo, pero quieres evitar perder nodos primarios que mantienen el estado de HDFS si es posible. ¿Qué configuración deberías usar?",
-        "options": [
-            "a) Usar solo instancias preemptivas para todos los nodos del clúster.",
-            "b) Configurar el Autoscaling de Dataproc especificando un número mínimo de workers primarios y permitiendo escalar workers secundarios, posiblemente preemptivos.",
-            "c) Crear un clúster efímero para cada trabajo usando la acción dataproc clusters create y delete.",
-            "d) Aumentar manualmente el tamaño del clúster antes de trabajos grandes y reducirlo después."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: El Autoscaling de Dataproc permite definir políticas para escalar automáticamente el número de workers secundarios (que no almacenan datos HDFS persistentes) basado en métricas de YARN. Puedes establecer un número mínimo de workers primarios (que sí mantienen HDFS) y permitir que los workers secundarios (incluso preemptivos para ahorrar costos) escalen hacia arriba y abajo según la carga, optimizando costos sin afectar la estabilidad de HDFS principal. Las instancias preemptivas para nodos maestros o primarios son riesgosas. Los clústeres efímeros funcionan pero el autoscaling es más dinámico para clústeres persistentes. La gestión manual (d) no es eficiente."
-    },
-    {
-        "question": "Pregunta 13: (IA) Has desplegado un modelo de detección de fraude en un Vertex AI Endpoint. Quieres monitorear continuamente la distribución de las características de entrada de las predicciones online y recibir alertas si esta distribución difiere significativamente de la distribución de los datos de entrenamiento (detectar deriva de características). ¿Qué capacidad de Vertex AI deberías habilitar?",
-        "options": [
-            "a) Vertex AI Explainable AI",
-            "b) Vertex AI Model Monitoring con detección de deriva (drift detection).",
-            "c) Vertex AI Continuous Evaluation",
-            "d) Configurar métricas personalizadas en Cloud Monitoring sobre los logs de predicción."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Vertex AI Model Monitoring está diseñado explícitamente para detectar deriva (drift) en las características de entrada y/o en las predicciones de los modelos desplegados en Endpoints. Puedes configurarlo para comparar las distribuciones de las solicitudes de predicción online con una distribución de referencia (normalmente, los datos de entrenamiento) y generar alertas si se supera un umbral de deriva especificado. Explainable AI explica predicciones individuales. Continuous Evaluation evalúa métricas de rendimiento con datos etiquetados. Las métricas personalizadas requerirían implementar la lógica de detección de deriva manualmente."
-    },
-    {
-        "question": "Pregunta 14: Estás diseñando un sistema para ingestar eventos de clickstream desde una aplicación móvil a BigQuery con baja latencia. El volumen de eventos puede variar significativamente. ¿Qué secuencia de servicios de GCP es la más robusta y escalable para este caso de uso?",
-        "options": [
-            "a) App Móvil -> Cloud Functions -> BigQuery (Tabledata.insertAll API)",
-            "b) App Móvil -> Pub/Sub -> Dataflow (Streaming) -> BigQuery (Streaming Inserts)",
-            "c) App Móvil -> Cloud Storage (archivos por lotes) -> BigQuery Data Transfer Service",
-            "d) App Móvil -> App Engine -> Task Queue -> BigQuery"
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Pub/Sub actúa como un buffer escalable y desacoplado, absorbiendo picos de ingesta. Dataflow proporciona un motor de procesamiento en streaming robusto y escalable que puede realizar transformaciones si es necesario antes de escribir en BigQuery usando la API de Streaming Inserts, que está diseñada para baja latencia. Cloud Functions puede tener limitaciones de escalabilidad y concurrencia para alto volumen. El enfoque por lotes (c) no cumple el requisito de baja latencia. App Engine/Task Queue (d) añade complejidad innecesaria comparado con Pub/Sub/Dataflow."
-    },
-    {
-        "question": "Pregunta 15: Necesitas asegurar que los datos sensibles (ej. números de tarjeta de crédito) en una tabla de BigQuery sean automáticamente detectados y anonimizados (ej. enmascarados o tokenizados) antes de que un analista de datos, que no debería ver los datos originales, pueda consultarlos. ¿Qué combinación de servicios y características de GCP deberías usar?",
-        "options": [
-            "a) Cloud IAM para restringir el acceso a la tabla.",
-            "b) Encriptación a nivel de columna en BigQuery.",
-            "c) Cloud DLP para crear plantillas de desidentificación y políticas de inspección, combinadas con enmascaramiento dinámico de datos en BigQuery o creando vistas autorizadas con los datos transformados por DLP.",
-            "d) Escribir un UDF (User Defined Function) en BigQuery que realice el enmascaramiento durante la consulta."
-        ],
-        "answer": "Respuesta correcta: c",
-        "explanation": "Explicación: Cloud DLP es el servicio diseñado para detectar y clasificar datos sensibles. Sus plantillas de desidentificación pueden definir cómo transformar (enmascarar, tokenizar, etc.) esos datos. Esto se puede integrar con BigQuery de varias maneras: escaneando y creando una copia anonimizada, o más dinámicamente usando vistas autorizadas que aplican transformaciones DLP, o mediante políticas de enmascaramiento dinámico que aplican la lógica de DLP basada en la identidad del usuario que consulta. IAM restringe el acceso pero no transforma los datos. La encriptación protege en reposo/tránsito pero no anonimiza para el análisis. Un UDF es posible pero menos robusto y gestionable que usar DLP."
-    },
-    {
-        "question": "Pregunta 16: (IA) Estás utilizando Vertex AI Pipelines para orquestar un flujo de trabajo de MLOps que incluye preprocesamiento de datos, entrenamiento de modelo, evaluación y despliegue condicional. Necesitas pasar un pequeño artefacto (ej. el ID de un dataset preprocesado en GCS) desde un paso de preprocesamiento a un paso de entrenamiento. ¿Cómo se maneja típicamente el paso de artefactos y parámetros entre componentes en Vertex AI Pipelines?",
-        "options": [
-            "a) Escribir los artefactos/parámetros en un archivo en un bucket de GCS compartido y leerlo en el siguiente paso.",
-            "b) Usar variables de entorno definidas en la configuración del pipeline.",
-            "c) Definir Outputs (Artefactos o Parámetros) en el componente de origen y usarlos como Inputs en el componente de destino, gestionados automáticamente por la plataforma de pipelines.",
-            "d) Almacenar los metadatos en una tabla de BigQuery y consultarla en el siguiente paso."
-        ],
-        "answer": "Respuesta correcta: c",
-        "explanation": "Explicación: Vertex AI Pipelines (basado en Kubeflow Pipelines) tiene un sistema incorporado para gestionar el paso de metadatos y artefactos entre componentes. Los componentes pueden declarar Outputs (como OutputPath para archivos o Output[Dataset] para artefactos específicos) y Output[Parameter] para valores pequeños. Estos outputs se convierten automáticamente en Inputs para los componentes subsiguientes que los declaran, y la plataforma maneja el almacenamiento subyacente (generalmente en GCS) y el paso de referencias. Usar GCS directamente (a) o BigQuery (d) es posible pero menos idiomático y requiere gestión manual. Las variables de entorno (b) son para configuración estática, no para pasar datos dinámicos entre pasos."
-    },
-    {
-        "question": "Pregunta 17: Tienes un conjunto de datos en BigQuery que contiene información de clientes, incluyendo direcciones de correo electrónico. Debes compartir una versión de este conjunto de datos con un tercero para análisis, pero sin revelar las direcciones de correo electrónico reales. Quieres reemplazarlas con un identificador único y consistente para cada dirección, pero que no sea reversible. ¿Qué técnica de desidentificación deberías aplicar usando Cloud DLP?",
-        "options": [
-            "a) Enmascaramiento (Masking)",
-            "b) Redacción (Redaction)",
-            "c) Tokenización Criptográfica (Cryptographic Tokenization) usando un método de Hashing Criptográfico Seguro (como SHA-256).",
-            "d) Tokenización Preservadora de Formato (Format-Preserving Tokenization) con una clave envuelta."
-        ],
-        "answer": "Respuesta correcta: c",
-        "explanation": "Explicación: El hashing criptográfico seguro (como SHA-256), disponible a través de las transformaciones de Cloud DLP, genera un identificador único y consistente para cada valor de entrada (la dirección de correo electrónico). Es una operación unidireccional (no reversible), lo que cumple el requisito de no poder recuperar el correo original. El enmascaramiento oculta partes del dato. La redacción lo elimina. La tokenización preservadora de formato, especialmente si la clave se gestiona, podría ser reversible o no ser necesaria si solo se necesita un identificador consistente no reversible."
-    },
-    {
-        "question": "Pregunta 18: Estás ejecutando un pipeline de Dataflow que realiza una unión (join) entre un stream de eventos grande proveniente de Pub/Sub y un conjunto de datos de referencia relativamente pequeño (menos de 1 GB) que se actualiza diariamente y está almacenado en Cloud Storage. ¿Cuál es la forma más eficiente de realizar esta unión en Dataflow?",
-        "options": [
-            "a) Usar una transformación CoGroupByKey entre las dos PCollections.",
-            "b) Cargar el conjunto de datos de referencia como una vista lateral (side input) y realizar el lookup en un ParDo que procesa el stream principal.",
-            "c) Escribir ambos flujos a BigQuery y realizar la unión allí.",
-            "d) Leer el archivo de referencia desde GCS para cada elemento del stream dentro de un ParDo."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Las vistas laterales (side inputs) en Dataflow están diseñadas para unir una PCollection principal (especialmente un stream ilimitado) con datos de referencia que son pequeños, cambian con poca frecuencia y caben en la memoria de los workers. Dataflow distribuirá eficientemente los datos de la vista lateral a los workers. CoGroupByKey requiere que ambas PCollections tengan la misma estructura de clave/valor y es más adecuado para unir dos streams grandes o datasets batch. Escribir a BQ añade latencia. Leer el archivo repetidamente (d) es extremadamente ineficiente."
-    },
-    {
-        "question": "Pregunta 19: (IA) Entrenaste un modelo de clasificación de imágenes con Vertex AI AutoML Vision. Ahora quieres integrar este modelo en una aplicación móvil Android/iOS para que realice clasificaciones directamente en el dispositivo, incluso sin conexión a internet. ¿Qué formato de exportación de modelo deberías elegir en Vertex AI y qué tecnología usarías en la app móvil?",
-        "options": [
-            "a) Exportar como SavedModel de TensorFlow y usar TensorFlow Serving en un servidor.",
-            "b) Exportar como modelo TensorFlow Lite (.tflite) y usar la librería TensorFlow Lite en la aplicación móvil.",
-            "c) Exportar como contenedor Docker y ejecutarlo en Cloud Run.",
-            "d) Exportar como ONNX y usar ONNX Runtime en la app móvil."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Para la inferencia en el dispositivo (on-device inference) en móviles, TensorFlow Lite (.tflite) es el formato optimizado proporcionado por Google. Vertex AI AutoML Vision permite exportar modelos en este formato. La librería TensorFlow Lite se integra fácilmente en aplicaciones Android e iOS para ejecutar estos modelos localmente, permitiendo baja latencia y funcionamiento offline. Las otras opciones implican inferencia en servidor (a, c) o un formato diferente (d) que podría ser compatible pero TFLite es el estándar para AutoML Vision en móviles."
-    },
-    {
-        "question": "Pregunta 20: Necesitas almacenar metadatos sobre tus tablas en BigQuery, modelos de ML en Vertex AI y pipelines de datos en Dataflow en una ubicación centralizada y permitir el descubrimiento y la gobernanza de estos activos. ¿Qué servicio de GCP está diseñado para este propósito?",
-        "options": [
-            "a) Cloud Logging",
-            "b) Cloud Monitoring",
-            "c) Dataplex",
-            "d) BigQuery (usando tablas de metadatos personalizadas)"
-        ],
-        "answer": "Respuesta correcta: c",
-        "explanation": "Explicación: Dataplex es el servicio de tejido de datos inteligente (intelligent data fabric) de GCP que proporciona un catálogo de metadatos unificado (basado en Data Catalog), gobernanza de datos (incluyendo calidad y linaje) y gestión de seguridad centralizada para activos de datos distribuidos en BigQuery, Cloud Storage y GKE. Permite descubrir, entender y gestionar activos de datos y ML a escala. Logging/Monitoring son para observabilidad operativa. Usar BQ para metadatos requiere una implementación personalizada."
-    },
-    {
-        "question": "Pregunta 21: Un pipeline de Dataflow que lee de Kafka (gestionado externamente) y escribe a BigQuery falla intermitentemente con errores de OutOfMemoryError en los workers. El pipeline realiza una transformación GroupByKey que agrupa grandes cantidades de datos por clave. ¿Cuál es la causa más probable y la mejor solución?",
-        "options": [
-            "a) Las claves tienen una distribución muy sesgada (hot keys). Solución: Aplicar una transformación Combine.perKey antes del GroupByKey si es posible, o usar una técnica de salting (añadir un sufijo aleatorio a la clave).",
-            "b) El tamaño de la ventana es demasiado grande. Solución: Reducir la duración de la ventana.",
-            "c) La cuota de escritura de BigQuery es insuficiente. Solución: Solicitar aumento de cuota.",
-            "d) Los workers de Dataflow tienen un tipo de máquina demasiado pequeño. Solución: Especificar un tipo de máquina con más memoria."
-        ],
-        "answer": "Respuesta correcta: a",
-        "explanation": "Explicación: Los errores OutOfMemoryError durante un GroupByKey en Dataflow suelen ser causados por hot keys – claves que tienen muchísimos más valores asociados que otras. Esto sobrecarga la memoria de los workers que procesan esas claves específicas. Aplicar una combinación previa (Combine.perKey) reduce el volumen de datos antes del shuffle si la operación es asociativa/conmutativa. Si no, añadir sal a la clave distribuye la carga entre más claves y workers, realizando luego una segunda agrupación para eliminar el sal. Aumentar la memoria del worker (d) puede ayudar pero no resuelve el problema fundamental de la clave sesgada y puede ser costoso. El tamaño de ventana (b) o la cuota de BQ (c) son causas menos probables para un OutOfMemoryError específicamente en un GroupByKey."
-    },
-    {
-        "question": "Pregunta 22: (IA) Quieres usar BigQuery ML para entrenar un modelo de clasificación binaria para predecir la probabilidad de que un cliente haga clic en un anuncio. Tienes datos históricos con muchas características categóricas y numéricas. ¿Qué tipo de modelo (MODEL_TYPE) deberías especificar probablemente en tu sentencia CREATE MODEL?",
-        "options": [
-            "a) LINEAR_REG",
-            "b) LOGISTIC_REG",
-            "c) KMEANS",
-            "d) AUTOML_CLASSIFIER"
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: La regresión logística (LOGISTIC_REG) es un modelo estándar y adecuado para problemas de clasificación binaria (predecir una de dos clases, como clic/no-clic). Maneja bien características categóricas y numéricas. LINEAR_REG es para regresión (predecir un valor continuo). KMEANS es para clustering (agrupación no supervisada). AUTOML_CLASSIFIER podría usarse, pero LOGISTIC_REG es un punto de partida más específico y común para clasificación binaria directamente en BQML."
-    },
-    {
-        "question": "Pregunta 23: Tu organización tiene políticas estrictas sobre la residencia de datos, exigiendo que ciertos conjuntos de datos en BigQuery permanezcan físicamente dentro de la Unión Europea. Al crear un nuevo conjunto de datos para esta información, ¿qué configuración es crucial especificar?",
-        "options": [
-            "a)La clase de almacenamiento (Storage Class).",
-            "b)La ubicación del conjunto de datos (Dataset Location), seleccionando una región o multi-región dentro de la UE (ej. europe-west1 o EU).",
-            "c)Las etiquetas (Labels) del conjunto de datos.",
-            "d)La clave de encriptación gestionada por el cliente (CMEK), asegurándose de que la clave esté en la UE."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: La ubicación (Location) de un conjunto de datos de BigQuery determina la geografía física donde se almacenan los datos. Para cumplir con los requisitos de residencia de datos, es fundamental seleccionar una región o multi-región que se encuentre dentro de los límites geográficos permitidos (en este caso, la UE). Las otras configuraciones (clase de almacenamiento, etiquetas, CMEK) son importantes para otros aspectos, pero no controlan directamente la residencia física de los datos."
-    },
-    {
-        "question": "Pregunta 24: Estás diseñando un pipeline para procesar archivos de video subidos a Cloud Storage. El pipeline debe extraer el audio, transcribirlo a texto usando la API de Speech-to-Text, y luego analizar el sentimiento del texto usando la API de Natural Language. Quieres orquestar estos pasos de forma robusta. ¿Qué servicio sería el más adecuado para definir y ejecutar este workflow?",
-        "options": [
-            "a) Cloud Functions encadenadas mediante Pub/Sub.",
-            "b) Un script complejo ejecutándose en una instancia de Compute Engine.",
-            "c) Cloud Composer (Airflow) definiendo un DAG con operadores para GCS, Speech-to-Text y Natural Language.",
-            "d) Dataflow con un pipeline batch."
-        ],
-        "answer": "Respuesta correcta: c",
-        "explanation": "Explicación: Este es un workflow con pasos dependientes que involucran diferentes APIs y servicios de GCP. Cloud Composer es ideal para orquestar este tipo de procesos, definiendo un DAG (Grafo Acíclico Dirigido) donde cada nodo representa una tarea (ej. disparar la transcripción, esperar el resultado, disparar el análisis de sentimiento). Ofrece manejo de errores, reintentos y visibilidad. Encadenar Functions es frágil. Un script en GCE carece de la robustez y gestión de Airflow. Dataflow es más para procesamiento de datos a gran escala, no tanto para orquestar llamadas a APIs secuenciales como esta."
-    },
-    {
-        "question": "Pregunta 25: (IA) Necesitas anonimizar nombres de personas en un gran volumen de texto no estructurado almacenado en archivos dentro de Cloud Storage antes de que sean analizados. Quieres reemplazar los nombres con el tipo de entidad detectada (ej. PERSON_NAME). ¿Qué combinación de servicios usarías?",
-        "options": [
-            "a) Dataflow para leer los archivos y BigQuery ML para detectar y reemplazar nombres.",
-            "b) Cloud Functions activadas por GCS para llamar a la API de Cloud Natural Language para detectar entidades.",
-            "c) Usar la API de Cloud Data Loss Prevention (DLP) con una acción replaceWithInfoType configurada en un job de inspección sobre el bucket de GCS.",
-            "d) Entrenar un modelo NER personalizado en Vertex AI y aplicarlo con un job de Batch Prediction."
-        ],
-        "answer": "Respuesta correcta: c",
-        "explanation": "Explicación: Cloud DLP está específicamente diseñado para detectar y transformar (desidentificar) información sensible, incluyendo tipos de infoTypes como PERSON_NAME. Puede operar directamente sobre datos en Cloud Storage a través de jobs de inspección. La acción replaceWithInfoType reemplaza el texto detectado con el nombre del infoType, cumpliendo exactamente el requisito. Usar la API de NL (b) requeriría implementar la lógica de reemplazo. BQML (a) no opera directamente sobre archivos en GCS de esta manera. Entrenar un modelo personalizado (d) es innecesario si DLP ya detecta nombres de personas."
-    },
-    {
-        "question": "Pregunta 26: Tienes una tabla muy grande en BigQuery particionada por fecha de ingesta. Las consultas que filtran por un ID de cliente específico (customer_id) son lentas porque escanean particiones enteras. ¿Qué optimización adicional deberías aplicar a la tabla para acelerar estas consultas?",
-        "options": [
-            "a) Cambiar la partición a customer_id.",
-            "b) Clusterizar la tabla por la columna customer_id.",
-            "c) Crear una vista materializada filtrada por customer_id.",
-            "d) Usar la API de BigQuery Storage Read para leer los datos más rápido."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Dado que la tabla ya está particionada (presumiblemente por una columna de fecha, lo cual es común y útil), añadir clustering por customer_id es la optimización ideal para acelerar los filtros sobre esa columna. El clustering co-localiza físicamente las filas con el mismo customer_id dentro de cada partición, permitiendo a BigQuery evitar escanear bloques enteros de datos que no contienen el customer_id buscado. Cambiar la partición a customer_id podría no ser ideal si los rangos de fechas también son importantes. Las vistas materializadas pueden ayudar pero el clustering es más directo para este patrón de filtro. La API Storage Read acelera la lectura, pero no reduce los datos escaneados por el filtro."
-    },
-    {
-        "question": "Pregunta 27: Quieres programar la ejecución de un script de Python que realiza una consulta en BigQuery y guarda los resultados en un bucket de Cloud Storage cada lunes a las 3 AM. El script es relativamente simple y de corta duración. ¿Cuál es la forma más sencilla y rentable de implementar esta tarea programada en GCP?",
-        "options": [
-            "a) Configurar un cron job en una instancia de Compute Engine siempre encendida.",
-            "b) Usar Cloud Composer con un DAG simple.",
-            "c) Usar Cloud Scheduler para activar una Cloud Function que ejecute el script de Python.",
-            "d) Desplegar el script como un servicio en Cloud Run y activarlo con Cloud Scheduler."
-        ],
-        "answer": "Respuesta correcta: c",
-        "explanation": "Explicación: Para tareas programadas simples y de corta duración, la combinación de Cloud Scheduler (para la programación cron) y Cloud Functions (para la ejecución serverless del script) es la solución más gestionada, rentable y sencilla. No requiere mantener infraestructura (como GCE) ni la sobrecarga de un orquestador completo como Composer. Cloud Run también es una opción serverless, pero Cloud Functions suele ser más directo para scripts individuales activados por eventos o programaciones."
-    },
-    {
-        "question": "Pregunta 28: Estás construyendo un pipeline de MLOps usando Vertex AI Pipelines. Quieres asegurarte de que un modelo solo se despliegue en producción si su métrica de precisión en un conjunto de datos de evaluación supera un umbral predefinido (ej. 90%). ¿Cómo implementarías esta lógica condicional dentro del pipeline?",
-        "options": [
-            "a) Usar un componente Conditional basado en un parámetro de salida del paso de evaluación del modelo.",
-            "b) Escribir un script personalizado que verifique la métrica y llame a la API de despliegue si se cumple la condición.",
-            "c) Configurar una política de IAM que restrinja el despliegue basado en métricas.",
-            "d) Usar Cloud Monitoring para monitorear la métrica y activar el despliegue a través de una alerta."
-        ],
-        "answer": "Respuesta correcta: a",
-        "explanation": "Explicación: Vertex AI Pipelines (basado en KFP SDK v2) incluye componentes condicionales (with dsl.Condition(...)) que permiten ejecutar ramas del pipeline basadas en el resultado de una comparación de parámetros de salida de pasos anteriores. Puedes tener un paso de evaluación que emita la métrica de precisión como un Output[Parameter] y luego usar una condición dsl.Condition(metric >= threshold) para decidir si ejecutar o no el componente de despliegue. Esta es la forma idiomática y declarativa de manejar la lógica condicional dentro de los pipelines."
-    },
-    {
-        "question": "Pregunta 29: Necesitas proporcionar acceso temporal a un contratista externo para que pueda cargar archivos en un bucket específico de Cloud Storage durante las próximas 48 horas. No quieres crear una cuenta de Google permanente para el contratista. ¿Cuál es la forma más segura y adecuada de conceder este acceso?",
-        "options": [
-            "a) Crear una cuenta de servicio, generar una clave JSON y enviársela al contratista.",
-            "b) Usar URLs firmadas (Signed URLs) de Cloud Storage con un tiempo de expiración corto para la acción de carga (PUT o POST).",
-            "c) Añadir la dirección de correo personal del contratista al IAM del bucket con el rol roles/storage.objectCreator.",
-            "d) Configurar una política de firma de V4 (V4 Signed Policy Document) que permita cargas durante 48 horas."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Si bien las políticas de firma V4 son poderosas, para un acceso temporal de carga de archivos por parte de un contratista sin una cuenta de Google permanente, la forma más sencilla y segura es usar URLs firmadas (Signed URLs) con un tiempo de expiración de 48 horas para las acciones PUT o POST. Esto genera una URL única que el contratista puede usar para cargar archivos directamente al bucket dentro del período especificado, sin necesidad de credenciales adicionales. Las políticas de firma son más complejas de generar y usar para este caso puntual."
-    },
-    {
-        "question": "Pregunta 30: Estás analizando datos de rendimiento de consultas en BigQuery usando las vistas INFORMATION_SCHEMA.JOBS_BY_*. Observas que muchas consultas tienen un alto valor en total_slot_ms pero un bajo total_bytes_processed. ¿Qué indica esto probablemente sobre esas consultas y qué podrías investigar para optimizarlas?",
-        "options": [
-            "a) Las consultas están leyendo muchos datos pequeños pero realizando operaciones de cómputo muy intensivas (ej. UDFs complejos, JOINs explosivos, expresiones regulares costosas). Investigar el plan de consulta y optimizar las etapas de cómputo.",
-            "b) Las consultas están esperando recursos (slots) y pasan mucho tiempo en cola. Investigar la concurrencia y considerar reservas de slots.",
-            "c) Las consultas están leyendo grandes cantidades de datos desde tablas externas. Investigar si se pueden materializar en tablas nativas.",
-            "d) Hay un problema con la recolección de estadísticas de la tabla, lo que lleva a planes de consulta subóptimos. Ejecutar ANALYZE TABLE."
-        ],
-        "answer": "Respuesta correcta: a",
-        "explanation": "Explicación: total_slot_ms representa el tiempo de cómputo consumido por la consulta en todos los slots. Si es alto mientras que total_bytes_processed (los datos leídos) es bajo, sugiere que la mayor parte del esfuerzo se dedica al procesamiento (CPU) en lugar de la E/S. Causas comunes son funciones complejas (JavaScript UDFs son notorias), JOINs que generan muchas filas intermedias (producto cartesiano accidental), o funciones analíticas/expresiones regulares complejas. El plan de consulta (Query plan explanation) revelará qué etapas consumen más slots. La espera de slots (b) se refleja en total_pending_ms. Las tablas externas (c) suelen aumentar total_bytes_processed o la latencia. Las estadísticas (d) afectan la planificación, pero el síntoma apunta a cómputo intensivo."
-    },
-    {
-        "question": "Pregunta 31: Quieres entrenar un modelo de detección de objetos en imágenes usando Vertex AI, pero tienes un presupuesto limitado para el etiquetado manual de datos. Solo una pequeña fracción de tu gran conjunto de imágenes está etiquetada con cuadros delimitadores (bounding boxes). ¿Qué estrategia de entrenamiento en Vertex AI podría ayudarte a aprovechar tanto los datos etiquetados como los no etiquetados para mejorar el rendimiento del modelo?",
-        "options": [
-            "a) Usar Vertex AI AutoML Vision Object Detection, ya que maneja automáticamente conjuntos de datos parcialmente etiquetados.",
-            "b) Ignorar los datos no etiquetados y entrenar solo con la pequeña fracción etiquetada.",
-            "c) Implementar un enfoque de aprendizaje semi-supervisado (semi-supervised learning) usando un trabajo de entrenamiento personalizado (Custom Training) en Vertex AI.",
-            "d) Usar BigQuery ML para entrenar el modelo, ya que tiene capacidades semi-supervisadas incorporadas."
-        ],
-        "answer": "Respuesta correcta: c",
-        "explanation": "Explicación: El aprendizaje semi-supervisado es una técnica diseñada para mejorar el rendimiento del modelo utilizando una gran cantidad de datos no etiquetados junto con una pequeña cantidad de datos etiquetados. Aunque AutoML puede tener algunas optimizaciones, no está explícitamente diseñado para el aprendizaje semi-supervisado complejo. Para implementarlo de manera efectiva (usando técnicas como pseudo-etiquetado o consistency regularization), necesitarías desarrollar un script de entrenamiento personalizado y ejecutarlo como un Custom Training Job en Vertex AI. Ignorar datos (b) es subóptimo. BQML no es adecuado para detección de objetos en imágenes."
-    },
-    {
-        "question": "Pregunta 32: Necesitas transferir datos diariamente desde una base de datos MySQL on-premises a una tabla en BigQuery. Quieres una solución gestionada por Google que maneje el esquema, la carga incremental y la programación. ¿Qué servicio de GCP deberías usar?",
-        "options": [
-            "a) Escribir un script personalizado con mysqldump y bq load.",
-            "b) Usar Dataflow con conectores JDBC y BigQueryIO.",
-            "c) Configurar BigQuery Data Transfer Service con el conector para Cloud SQL (requiere replicación previa a Cloud SQL) o usar un conector de terceros si es directo desde on-prem.",
-            "d) Usar Datastream para replicar cambios de MySQL a Cloud Storage y luego cargar desde GCS a BigQuery."
-        ],
-        "answer": "Respuesta correcta: d",
-        "explanation": "Explicación: Datastream es el servicio de CDC (Change Data Capture) y replicación gestionado de GCP. Puede capturar cambios casi en tiempo real (o en batch) desde bases de datos como MySQL (on-premises o en la nube) y replicarlos a destinos como Cloud Storage. Una vez los datos (o cambios) están en GCS, se pueden cargar fácilmente a BigQuery usando Data Transfer Service, Dataflow, o bq load. Esto proporciona una solución robusta y gestionada para la replicación continua o incremental. BigQuery DTS no tiene un conector directo para MySQL on-premises. Dataflow requiere más desarrollo. El script personalizado es menos robusto."
-    },
-    {
-        "question": "Pregunta 33: Estás almacenando archivos Parquet en un bucket de Cloud Storage y quieres consultarlos directamente usando BigQuery sin cargarlos en el almacenamiento nativo de BigQuery. ¿Qué tipo de tabla deberías crear en BigQuery?",
-        "options": [
-            "a) Una tabla estándar de BigQuery.",
-            "b) Una tabla externa (External Table).",
-            "c) Una vista materializada (Materialized View).",
-            "d) Una vista (View) lógica."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Las tablas externas en BigQuery permiten consultar datos almacenados en Cloud Storage (en formatos como Parquet, ORC, Avro, CSV, JSON) directamente, sin necesidad de cargar o duplicar los datos en el almacenamiento gestionado de BigQuery. Simplemente defines la tabla apuntando a la ubicación de los archivos en GCS y especificando el formato."
-    },
-    {
-        "question": "Pregunta 34: Has entrenado un modelo de lenguaje grande (LLM) personalizado en Vertex AI para generar resúmenes de texto. Quieres evaluar la calidad de los resúmenes generados utilizando métricas estándar como ROUGE. ¿Cómo puedes integrar esta evaluación en tu flujo de trabajo de MLOps en Vertex AI?",
-        "options": [
-            "a) Utilizar las métricas incorporadas de Vertex AI Model Monitoring.",
-            "b) Crear un componente personalizado en Vertex AI Pipelines que calcule ROUGE scores comparando los resúmenes generados con resúmenes de referencia.",
-            "c) Usar Vertex AI Explainable AI para obtener puntuaciones de calidad.",
-            "d) Exportar los resultados a BigQuery y calcular ROUGE usando SQL UDFs."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Métricas específicas de NLP como ROUGE no suelen estar incorporadas directamente en la evaluación automática estándar o el monitoreo de Vertex AI (que se centra más en clasificación/regresión o deriva). La forma más flexible y estándar de calcular métricas personalizadas o específicas de dominio como ROUGE es crear un componente personalizado (usando Python y bibliotecas como rouge-score) dentro de tu Vertex AI Pipeline. Este componente tomaría las predicciones del modelo y los datos de referencia como entrada y emitiría las puntuaciones calculadas como métricas o artefactos. Explainable AI es para interpretabilidad, no evaluación de calidad. Calcular en BQ es posible pero menos integrado en el pipeline de MLOps."
-    },
-    {
-        "question": "Pregunta 35: Necesitas implementar un pipeline de datos que procese información sensible sujeta a GDPR. El pipeline se ejecutará en Dataflow. ¿Qué medidas de seguridad son fundamentales aplicar para proteger los datos en tránsito y asegurar que el procesamiento ocurra dentro de una red controlada?",
-        "options": [
-            "a) Usar CMEK para encriptar los datos en las fuentes y destinos (ej. Pub/Sub, GCS, BigQuery).",
-            "b) Ejecutar los workers de Dataflow dentro de una red VPC compartida y usar Private Google Access.",
-            "c) Deshabilitar el acceso a IP públicas en los workers de Dataflow y configurar VPC Service Controls para crear un perímetro de seguridad alrededor de los servicios utilizados (Dataflow, GCS, BigQuery, Pub/Sub).",
-            "d) Confiar en la encriptación en tránsito predeterminada de Google y enfocarse solo en los permisos IAM."
-        ],
-        "answer": "Respuesta correcta: c",
-        "explanation": "Explicación: Para asegurar que el procesamiento de datos sensibles ocurra dentro de un entorno de red controlado y prevenir la exfiltración de datos, es crucial: 1) Deshabilitar el acceso a IP públicas en los workers de Dataflow (--usePublicIps=false) para que no puedan acceder a internet directamente. 2) Configurar Private Google Access en la subred para que los workers puedan alcanzar las APIs de Google sin IP pública."
-    },
-    {
-        "question": "Pregunta 36: Tu equipo está utilizando Cloud Composer para orquestar pipelines ETL. El entorno de Composer está experimentando lentitud y fallos en la ejecución de tareas. Quieres diagnosticar el problema. ¿Qué herramientas y métricas dentro de GCP deberías revisar primero?",
-        "options": [
-            "a) Los logs de las tareas de Airflow en Cloud Logging y las métricas de utilización de CPU/Memoria del clúster GKE de Composer en Cloud Monitoring.",
-            "b) Las métricas de latencia de la API de BigQuery.",
-            "c) Los logs de auditoría de Cloud Storage.",
-            "d) Las métricas de rendimiento de la red VPC."
-        ],
-        "answer": "Respuesta correcta: a",
-        "explanation": "Explicación: Cuando un entorno de Cloud Composer tiene problemas, los primeros lugares para buscar son: 1) Los logs específicos de las tareas de Airflow que fallan o se retrasan, disponibles en la UI de Airflow y en Cloud Logging (bajo airflow-scheduler, airflow-worker, etc.). Estos logs contienen los errores específicos o stack traces. 2) Las métricas de utilización de recursos (CPU, memoria) del clúster de Google Kubernetes Engine (GKE) subyacente que ejecuta Composer, disponibles en Cloud Monitoring. Un clúster sobrecargado es una causa común de lentitud y fallos. Las otras métricas (b, c, d) son relevantes para los servicios con los que interactúa Composer, pero los problemas del propio entorno de Composer se diagnostican mejor con sus logs y métricas de clúster."
-    },
-    {
-        "question": "Pregunta 37: Estás usando Vertex AI Feature Store para servir características online. Observas que la latencia de obtención de características (online_serving_latency) ha aumentado. ¿Qué factor es MENOS probable que contribuya directamente a este aumento de latencia?",
-        "options": [
-            "a) El tamaño total del Feature Store (número de entidades o características).",
-            "b) La complejidad del tipo de datos de las características que se están sirviendo.",
-            "c) El número de solicitudes de servicio online por segundo (QPS).",
-            "d) La distancia geográfica entre la aplicación cliente y la región del endpoint de servicio online."
-        ],
-        "answer": "Respuesta correcta: a",
-        "explanation": "Explicación: Vertex AI Feature Store está diseñado para escalar horizontalmente y proporcionar baja latencia independientemente del tamaño total del almacén (número de entidades o características almacenadas). La latencia de servicio online se ve más afectada por la carga actual (QPS) (c), la complejidad de los datos que se recuperan por solicitud (b), y la latencia de red entre el cliente y el servidor (d). Si bien un tamaño extremo podría tener efectos indirectos, no es un factor directo en la latencia de una solicitud individual como los otros."
-    },
-    {
-        "question": "Pregunta 38: Quieres crear una copia de seguridad de una tabla importante de BigQuery cada día y retener las copias de seguridad durante 30 días. ¿Cuál es la forma más idiomática y eficiente de lograr esto en BigQuery?",
-        "options": [
-            "a) Programar un job de exportación de la tabla a Cloud Storage cada día y configurar una política de ciclo de vida en el bucket.",
-            "b) Usar la funcionalidad de instantáneas de tabla (Table Snapshots) de BigQuery, creando una instantánea diaria y eliminando las que tengan más de 30 días.",
-            "c) Ejecutar una consulta CREATE TABLE AS SELECT (CTAS) cada día para copiar la tabla.",
-            "d) Usar BigQuery Data Transfer Service para copiar la tabla a otro conjunto de datos diariamente."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Las instantáneas de tabla (Table Snapshots) de BigQuery están diseñadas específicamente para crear copias puntuales y de bajo costo de las tablas. Crear una instantánea es una operación de metadatos rápida y económica. Puedes programar la creación de instantáneas diarias (usando Cloud Scheduler y la API de BQ, o una herramienta de orquestación) y luego tener otro proceso que elimine las instantáneas con más de 30 días. Las exportaciones a GCS (a) sacan los datos de BQ y requieren recarga para restaurar. CTAS (c) copia todos los datos físicamente, lo cual es más caro en almacenamiento y procesamiento que las instantáneas. DTS (d) es más para transferir datos entre ubicaciones o fuentes externas."
-    },
-    {
-        "question": "Pregunta 39: Un pipeline de Dataflow que lee de Pub/Sub y realiza agregaciones basadas en ventanas de tiempo necesita garantizar que cada elemento se procese exactamente una vez, incluso si los workers fallan y se reinician. ¿Qué modo de procesamiento debería habilitar Dataflow y qué característica de Pub/Sub ayuda a lograr esto?",
-        "options": [
-            "a) Modo At Least Once en Dataflow y reconocimiento (ack) de mensajes en Pub/Sub.",
-            "b) Modo Exactly-Once (procesamiento efectivo exactly-once) en Dataflow, que se basa en el almacenamiento persistente de Dataflow y el reconocimiento (ack) de mensajes en Pub/Sub.",
-            "c) Usar Dataflow SQL con semántica exactly-once.",
-            "d) Implementar lógica de duplicación personalizada en el pipeline."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: Dataflow proporciona semántica de procesamiento efectivo exactly-once para pipelines de streaming que leen de fuentes como Pub/Sub. Esto se logra combinando el mecanismo de reconocimiento de mensajes de Pub/Sub (que asegura que un mensaje no se pierda hasta que se reconozca) con el sistema interno de Dataflow que guarda el estado del procesamiento (como las agregaciones parciales) de forma persistente y utiliza identificadores únicos para detectar y descartar duplicados que podrían surgir durante reintentos o reinicios de workers. No es un modo que se habilite explícitamente como tal, sino la garantía que ofrece el servicio cuando se usan fuentes y sumideros compatibles y transformaciones idempotentes o con estado gestionado por Dataflow. La lógica personalizada (d) es compleja y propensa a errores."
-    },
-    {
-        "question": "Pregunta 40: Estás evaluando dos modelos de clasificación entrenados en Vertex AI para un problema de detección de spam. El Modelo A tiene mayor precisión general, pero el Modelo B tiene un 'recall' (sensibilidad) mucho mayor para la clase 'spam'. Dado que es crítico identificar la mayor cantidad posible de correos spam, incluso a costa de algunos falsos positivos, ¿qué métrica y qué modelo deberías priorizar?",
-        "options": [
-            "a) Priorizar la precisión y el Modelo A.",
-            "b) Priorizar el 'recall' (sensibilidad) para la clase 'spam' y el Modelo B.",
-            "c) Priorizar la puntuación F1 y elegir el modelo con la mejor puntuación F1.",
-            "d) Priorizar el AUC (Área bajo la curva ROC) y elegir el modelo con el mayor AUC."
-        ],
-        "answer": "Respuesta correcta: b",
-        "explanation": "Explicación: El 'recall' (o sensibilidad) mide la proporción de positivos reales (correos spam) que el modelo identificó correctamente. Si el objetivo principal es minimizar los falsos negativos (spam no detectado), entonces el 'recall' para la clase positiva ('spam') es la métrica más importante. Por lo tanto, se debe priorizar el Modelo B, que tiene un mayor 'recall' para el spam, aceptando potencialmente una menor precisión (más falsos positivos). La precisión se enfoca en cuán correctas son las predicciones positivas. F1 es un balance entre precisión y 'recall'. AUC mide la capacidad general de discriminación, pero no refleja directamente el coste específico de los falsos negativos en este escenario."
-    },
-    {
-        "question": "Pregunta 41: Estás desarrollando una aplicación que permite a los usuarios subir imágenes de productos. Quieres utilizar la IA para automáticamente identificar los productos en las imágenes y categorizarlos. Buscas una solución completamente gestionada y fácil de integrar sin necesidad de un extenso entrenamiento de modelos personalizado. ¿Qué servicio de Vertex AI sería el más adecuado para esta tarea?",
-        "options": [
-            "a) Vertex AI Custom Training",
-            "b) Vertex AI Vision AI",
-            "c) Vertex AI Natural Language AI",
-            "d) Vertex AI Workbench"
-        ],
-        "answer": "Respuesta Correcta: b",
-        "explanation": "Explicación: Vertex AI Vision AI ofrece modelos pre-entrenados y APIs para diversas tareas de visión por computadora, incluyendo la clasificación de imágenes y la detección de objetos. Es una solución completamente gestionada que simplifica la integración de capacidades de IA de visión en aplicaciones sin requerir un entrenamiento de modelos desde cero."
-    },
-    {
-        "question": "Pregunta 42: Tu equipo está construyendo un chatbot de atención al cliente y necesita integrar capacidades avanzadas de comprensión del lenguaje natural, incluyendo la detección de la intención del usuario, la extracción de entidades y la respuesta conversacional. Quieres una solución robusta y escalable dentro de GCP. ¿Qué servicio de IA sería la mejor opción?",
-        "options": [
-            "a) Cloud Speech-to-Text",
-            "b) Cloud Translation",
-            "c) Vertex AI Conversation",
-            "d) Vertex AI Document AI"
-        ],
-        "answer": "Respuesta Correcta: c",
-        "explanation": "Explicación: Vertex AI Conversation está diseñado específicamente para construir interfaces conversacionales potentes. Ofrece herramientas y modelos para la comprensión del lenguaje natural (NLU), la gestión del diálogo y la generación de respuestas, facilitando la creación de chatbots sofisticados."
-    },
-    {
-        "question": "Pregunta 43: Necesitas procesar grandes volúmenes de documentos no estructurados (PDFs, imágenes de documentos escaneados) para extraer información clave como nombres, direcciones y números de factura. Buscas una solución de IA que pueda manejar la complejidad de diferentes formatos de documentos. ¿Qué servicio de GCP sería el más apropiado?",
-        "options": [
-            "a) Vertex AI Vision AI (para clasificación de imágenes)",
-            "b) Vertex AI Natural Language AI (para análisis de texto plano)",
-            "c) Vertex AI Document AI d) Cloud Storage con OCR habilitado"
-        ],
-        "answer": "Respuesta Correcta: c",
-        "explanation": "Explicación: Vertex AI Document AI está diseñado específicamente para el procesamiento inteligente de documentos. Utiliza modelos de IA avanzados para comprender la estructura de los documentos y extraer información relevante de diversos formatos, incluyendo PDFs e imágenes escaneadas."
-    },
-    {
-        "question": "Pregunta 44: Estás desarrollando una aplicación que requiere la generación de texto creativo, como la redacción de correos electrónicos de marketing o la creación de descripciones de productos. Quieres aprovechar los modelos de lenguaje grandes (LLMs) más recientes de Google. ¿Qué componente de Vertex AI te permitiría acceder a estos modelos generativos?",
-        "options": [
-            "a) Vertex AI Model Registry",
-            "b) Vertex AI Feature Store",
-            "c) Vertex AI Generative AI Studio",
-            "d) Vertex AI Workbench"
-        ],
-        "answer": "Respuesta Correcta: c",
-        "explanation": "Explicación: Vertex AI Generative AI Studio proporciona una interfaz para experimentar, prototipar y desplegar aplicaciones basadas en los modelos de lenguaje grandes de Google, como PaLM 2. Permite la generación de texto, la traducción, la respuesta a preguntas y otras tareas creativas basadas en texto."
-    },
-    {
-        "question": "Pregunta 45: Quieres integrar capacidades de búsqueda semántica en tu aplicación para que los usuarios puedan encontrar información relevante basándose en el significado de sus consultas, en lugar de solo en coincidencias de palabras clave. Tienes un gran corpus de documentos de texto. ¿Qué servicio de IA en GCP sería el más adecuado para construir un índice de búsqueda semántica?",
-        "options": [
-            "a) Vertex AI Natural Language AI (para análisis de sentimiento)",
-            "b) Vertex AI Matching Engine",
-            "c) BigQuery con búsqueda de texto completo",
-            "d) Cloud Firestore (para almacenamiento de documentos)"
-        ],
-        "answer": "Respuesta Correcta: b",
-        "explanation": "Explicación: Vertex AI Matching Engine es un servicio para construir y desplegar índices vectoriales a gran escala para la búsqueda por similitud semántica. Permite indexar las representaciones vectoriales (embeddings) de tus documentos y realizar búsquedas eficientes basadas en la similitud semántica de las consultas de los usuarios."
-    }
-]
+            "question": "Estás diseñando un pipeline de datos en Dataflow que procesa datos de telemetría de dispositivos IoT. Necesitas enriquecer estos datos en tiempo real con información de perfil de usuario almacenada en Cloud Bigtable para personalizar alertas. ¿Cuál es el enfoque más eficiente y de menor latencia para realizar este enriquecimiento dentro de Dataflow?",
+            "options": [
+                "Usar una transformación ParDo que realice lecturas directas a Bigtable para cada elemento.",
+                "Cargar los perfiles relevantes en una vista lateral (side input) de Dataflow y realizar un lookup.",
+                "Escribir los datos de telemetría a Pub/Sub y usar una Cloud Function para enriquecerlos desde Bigtable.",
+                "Usar BigQuery como lookup leyendo la tabla de perfiles directamente desde Dataflow."
+            ],
+            "correctIndex": 1,
+            "explanation": "Cargar los perfiles relevantes en una vista lateral (side input) de Dataflow y realizar un lookup. Si bien realizar lecturas directas a Bigtable con un ParDo es una opción, cargar los perfiles relevantes en una vista lateral (side input) es generalmente el enfoque más eficiente y de menor latencia para enriquecer un stream grande de datos con un conjunto de datos de referencia relativamente pequeño que cabe en la memoria de los workers de Dataflow. Esto evita realizar una búsqueda por cada elemento del stream principal, lo que puede generar una latencia significativamente mayor y ejercer más presión sobre Bigtable. La vista lateral se carga una vez por worker."
+        },
+        {
+            "question": "Tu equipo ha entrenado un modelo de clasificación de texto usando Vertex AI Custom Training. Quieres desplegar este modelo para predicciones online con baja latencia y necesitas que escale automáticamente según la demanda. ¿Qué opción de despliegue en Vertex AI es la más adecuada?",
+            "options": [
+                "Vertex AI Batch Prediction job.",
+                "Desplegar el modelo en un Vertex AI Endpoint con escalado automático configurado.",
+                "Exportar el modelo y servirlo desde una instancia de Compute Engine con un balanceador de carga.",
+                "Usar BigQuery ML para importar y servir el modelo."
+            ],
+            "correctIndex": 1,
+            "explanation": "Vertex AI Endpoints está diseñado específicamente para servir modelos de ML para predicciones online (en tiempo real), ofreciendo escalado automático basado en el tráfico y gestión integrada. Batch Prediction es para inferencia asíncrona sobre grandes datasets. Servir manualmente desde GCE requiere gestionar la infraestructura y el escalado. BigQuery ML sirve modelos entrenados dentro de BQ, no modelos personalizados de Vertex AI directamente para predicción online de baja latencia."
+        },
+        {
+            "question": "Necesitas migrar un data warehouse on-premises de 50 TB a BigQuery. La migración debe completarse en una ventana de tiempo limitada y con mínima interrupción. Los datos están actualmente en formato CSV. ¿Qué combinación de servicios y herramientas de GCP es la más apropiada para esta tarea?",
+            "options": [
+                "Usar gsutil para subir los CSV a Cloud Storage y luego bq load desde GCS.",
+                "Utilizar Storage Transfer Service para mover los CSV a Cloud Storage y luego BigQuery Data Transfer Service para cargar los datos.",
+                "Usar Transfer Appliance para enviar físicamente los datos a Google, cargarlos en GCS y luego bq load.",
+                "Configurar una conexión VPN o Interconnect y usar Dataflow para leer los CSV on-premises y escribirlos en BigQuery."
+            ],
+            "correctIndex": 2,
+            "explanation": "Para una migración inicial de 50 TB en una ventana de tiempo limitada y con mínima interrupción, el Transfer Appliance suele ser la opción más adecuada. 50 TB ya es una cantidad considerable de datos donde la transferencia a través de la red podría llevar mucho tiempo y ser susceptible a interrupciones. Storage Transfer Service es excelente, pero para grandes volúmenes iniciales, el envío físico puede ser más rápido y confiable, especialmente si el ancho de banda de red es limitado. Una vez los datos están en GCS, bq load es el método eficiente para llevarlos a BigQuery."
+        },
+        {
+            "question": "Estás construyendo un pipeline de Dataflow en modo streaming que consume mensajes de Pub/Sub. El pipeline realiza agregaciones basadas en ventanas de tiempo. Quieres asegurar que los datos que llegan tarde (late datsean procesados y actualicen los resultados previamente calculados. ¿Qué configuración de windowing y triggering deberías usar?",
+            "options": [
+                "Ventanas fijas (Fixed windows) con el trigger por defecto.",
+                "Ventanas deslizantes (Sliding windows) con un trigger AfterWatermark.",
+                "Ventanas de sesión (Session windows) con un trigger AfterProcessingTime.",
+                "Ventanas fijas (Fixed windows) con un trigger AfterWatermark.pastEndOfWindow().withLateFirings(AfterCount(1)) y especificando AllowedLateness."
+            ],
+            "correctIndex": 3,
+            "explanation": "Para manejar datos tardíos y actualizar resultados, necesitas configurar AllowedLateness en la ventana para permitir que elementos tardíos se incluyan. El trigger AfterWatermark.pastEndOfWindow() asegura que se emita un resultado inicial cuando la marca de agua pasa el final de la ventana. withLateFirings() permite que triggers adicionales (como AfterCount(1)) se disparen si llegan elementos tardíos dentro del período de latencia permitido, actualizando así los resultados."
+        },
+        {
+            "question": "Tu empresa quiere implementar un sistema de detección de anomalías en logs de aplicaciones en tiempo real. Los logs se envían a Pub/Sub. Quieres usar un modelo de ML para identificar patrones inusuales. ¿Qué combinación de servicios de GCP sería más efectiva para construir y operar este sistema?",
+            "options": [
+                "Dataflow para procesar logs, BigQuery ML para entrenar un modelo de K-means y predicción en batch.",
+                "Cloud Logging para ingestar logs, exportarlos a BigQuery, y usar un modelo de Vertex AI entrenado para predicción en batch.",
+                "Pub/Sub para ingesta, Dataflow para procesamiento en tiempo real, y un modelo de detección de anomalías desplegado en un Vertex AI Endpoint para predicción en tiempo real",
+                "Cloud Functions para procesar logs de Pub/Sub y llamar a la API de Cloud Natural Language para análisis de sentimiento."
+            ],
+            "correctIndex": 2,
+            "explanation": "Para detección de anomalías en tiempo real, necesitas un pipeline de streaming. Pub/Sub + Dataflow es la combinación estándar para esto. Un modelo de ML (posiblemente entrenado en Vertex AI) desplegado en un Vertex AI Endpoint permite realizar predicciones de anomalías en tiempo real a medida que los datos fluyen por Dataflow. Las opciones de batch (a, no cumplen el requisito de tiempo real. La API de Natural Language (no está diseñada específicamente para detección de anomalías en logs."
+        },
+        {
+            "question": "Necesitas orquestar un workflow complejo que incluye tareas en Dataproc (Spark), BigQuery (SQL) y Vertex AI (entrenamiento de modelo). El workflow debe ejecutarse diariamente y tener capacidades de reintento y monitoreo. ¿Qué servicio de GCP es el más adecuado para esta orquestación?",
+            "options": [
+                "Cloud Scheduler + Cloud Functions",
+                "Cloud Composer (Airflow gestionado)",
+                "Vertex AI Pipelines",
+                "Cloud Build"
+            ],
+            "correctIndex": 1,
+            "explanation": "Cloud Composer es el servicio de orquestación de workflows gestionado de GCP, basado en Apache Airflow. Está diseñado para manejar dependencias complejas entre tareas que involucran diferentes servicios de GCP como Dataproc, BigQuery y Vertex AI, ofreciendo programación, reintentos y monitoreo. Cloud Scheduler/Functions son para tareas más simples. Vertex AI Pipelines es específico para MLOps. Cloud Build es para CI/CD."
+        },
+        {
+            "question": "Estás almacenando datos de series temporales en BigQuery y frecuentemente consultas rangos de fechas específicos y filtras por un ID de dispositivo. ¿Cómo deberías diseñar la tabla para optimizar el rendimiento y el costo de estas consultas?",
+            "options": [
+                "Crear una tabla estándar sin ninguna optimización especial.",
+                "Particionar la tabla por la columna de timestamp (ej. diariy clusterizarla por la columna device_id.",
+                "Usar una tabla externa apuntando a archivos CSV en Cloud Storage.",
+                "Crear índices secundarios en las columnas de timestamp y device_id."
+            ],
+            "correctIndex": 1,
+            "explanation": "Particionar por la columna de tiempo (timestamp) permite a BigQuery escanear solo las particiones relevantes para el rango de fechas consultado, reduciendo drásticamente los datos procesados y el costo. Clusterizar por device_id organiza físicamente los datos dentro de cada partición por ese ID, mejorando el rendimiento de los filtros sobre esa columna. BigQuery no soporta índices secundarios tradicionales. Las tablas externas son generalmente más lentas."
+        },
+        {
+            "question": "Quieres entrenar un modelo de regresión en BigQuery ML para predecir el valor de vida del cliente (CLV) usando datos históricos de transacciones. Los datos contienen columnas con información personal identificable (PII) que no deben ser usadas directamente en el entrenamiento pero sí quieres retenerlas en la tabla original. ¿Cuál es la mejor práctica?",
+            "options": [
+                "Crear una vista (VIEW) que excluya las columnas PII y usarla en la sentencia CREATE MODEL.",
+                "Usar la opción TRANSFORM en CREATE MODEL para seleccionar explícitamente las características (features) deseadas, excluyendo las PII.",
+                "Aplicar enmascaramiento dinámico de datos a las columnas PII antes de ejecutar CREATE MODEL.",
+                "Usar Cloud DLP para anonimizar las columnas PII directamente en la tabla base antes del entrenamiento."
+            ],
+            "correctIndex": 1,
+            "explanation": "La cláusula TRANSFORM dentro de CREATE MODEL en BigQuery ML permite realizar preprocesamiento y selección de características como parte de la sentencia de entrenamiento. Esto te permite elegir explícitamente las columnas a usar como features, excluyendo las PII, sin necesidad de crear vistas o modificar la tabla original. El enmascaramiento dinámico es para control de acceso en consultas, no para entrenamiento. Anonimizar con DLP es una opción válida, pero TRANSFORM es más directo dentro de BQML para la selección de características."
+        },
+        {
+            "question": "Tienes un pipeline de Dataflow que lee desde Pub/Sub y escribe en BigQuery. Durante picos de tráfico, observas que el data freshness (actualidad de los datos en BigQuery) aumenta significativamente, indicando retrasos. El número de workers de Dataflow parece estar escalando correctamente. ¿Cuál podría ser una causa común de este cuello de botella y cómo lo mitigarías?",
+            "options": [
+                "Límites de cuota de la API de Streaming Inserts de BigQuery. Mitigar solicitando un aumento de cuota.",
+                "Latencia alta en la red entre los workers de Dataflow y la API de BigQuery. Mitigar eligiendo una región más cercana.",
+                "El tópico de Pub/Sub no puede manejar la tasa de publicación. Mitigar  aumentando las particiones del tópico.",
+                "Transformaciones ineficientes en el pipeline de Dataflow. Mitigar optimizando el código del pipeline."
+            ],
+            "correctIndex": 3,
+            "explanation": "Si el número de workers de Dataflow está escalando correctamente pero la data freshness disminuye en picos de tráfico, una causa común es transformaciones ineficientes dentro del pipeline de Dataflow que se convierten en cuellos de botella bajo mayor carga. Esto podría incluir operaciones costosas o una mala elección de transformaciones que no escalan bien. Si la cuota de BigQuery fuera el problema principal, probablemente verías errores relacionados con la cuota. Optimizar el código del pipeline para hacerlo más eficiente es la mitigación clave."
+        },
+        {
+            "question": "Estás desarrollando un modelo de recomendación para un sitio de e-commerce usando Vertex AI. Necesitas almacenar y servir características (features) precalculadas de usuarios y productos con baja latencia para la inferencia online. ¿Qué componente de Vertex AI deberías utilizar para gestionar y servir estas características?",
+            "options": [
+                "Vertex AI Model Registry",
+                "Vertex AI Feature Store",
+                "Vertex AI Matching Engine",
+                "Vertex AI TensorBoard"
+            ],
+            "correctIndex": 1,
+            "explanation": "Vertex AI Feature Store está diseñado específicamente para almacenar, gestionar y servir características de ML con baja latencia, tanto para entrenamiento como para inferencia online. Permite desacoplar la generación de características del consumo, evitando la deriva entre entrenamiento y servicio (training-serving skew). Model Registry es para versiones de modelos, Matching Engine para búsqueda de similitud vectorial, y TensorBoard para visualización."
+        },
+        {
+            "question": "Necesitas configurar el acceso a un bucket de Cloud Storage para que un equipo específico de Data Scientists pueda leer y escribir objetos, pero no puedan eliminar el bucket ni cambiar sus permisos. Otro equipo de Data Analysts solo debe poder leer objetos. ¿Qué combinación de roles de IAM es la más apropiada siguiendo el principio de mínimo privilegio?",
+            "options": [
+                "Data Scientists: roles/storage.admin, Data Analysts: roles/storage.objectViewer.",
+                "Data Scientists: roles/storage.objectAdmin, Data Analysts: roles/storage.objectViewer.",
+                "Data Scientists: roles/storage.legacyBucketWriter, Data Analysts: roles/storage.legacyBucketReader.",
+                "Data Scientists: roles/storage.objectCreator y roles/storage.objectViewer, Data Analysts: rolesstorage.objectViewer."
+            ],
+            "correctIndex": 3,
+            "explanation": "El rol roles/storage.objectAdmin permite eliminar objetos, lo cual no cumple con el requisito de que los Data Scientists no puedan eliminar el bucket ni sus permisos. La combinación más adecuada siguiendo el principio de mínimo privilegio sería: Data Scientists: roles/storage.objectCreator (para subir nuevos objetos) y roles/storage.objectViewer (para leer los objetos existentes). Esto les permite leer y escribir datos sin la capacidad de eliminar objetos o modificar los permisos del bucket.Data Analysts: roles/storage.objectViewer (solo para leer objetos)."
+        },
+        {
+            "question": "Estás operando un clúster de Dataproc para trabajos ETL de Spark. Quieres optimizar los costos asegurándote de que el clúster escale hacia abajo cuando no esté en uso activo, pero quieres evitar perder nodos primarios que mantienen el estado de HDFS si es posible. ¿Qué configuración deberías usar?",
+            "options": [
+                "Usar solo instancias preemptivas para todos los nodos del clúster.",
+                "Configurar el Autoscaling de Dataproc especificando un número mínimo de workers primarios y permitiendo escalar workers secundarios, posiblemente preemptivos.",
+                "Crear un clúster efímero para cada trabajo usando la acción dataproc clusters create y delete.",
+                "Aumentar manualmente el tamaño del clúster antes de trabajos grandes y reducirlo después."
+            ],
+            "correctIndex": 1,
+            "explanation": "El Autoscaling de Dataproc permite definir políticas para escalar automáticamente el número de workers secundarios (que no almacenan datos HDFS persistentes) basado en métricas de YARN. Puedes establecer un número mínimo de workers primarios (que sí mantienen HDFS) y permitir que los workers secundarios (incluso preemptivos para ahorrar costos) escalen hacia arriba y abajo según la carga, optimizando costos sin afectar la estabilidad de HDFS principal. Las instancias preemptivas para nodos maestros o primarios son riesgosas. Los clústeres efímeros funcionan pero el autoscaling es más dinámico para clústeres persistentes. La gestión manual (no es eficiente."
+        },
+        {
+            "question": "Has desplegado un modelo de detección de fraude en un Vertex AI Endpoint. Quieres monitorear continuamente la distribución de las características de entrada de las predicciones online y recibir alertas si esta distribución difiere significativamente de la distribución de los datos de entrenamiento (detectar deriva de características). ¿Qué capacidad de Vertex AI deberías habilitar?",
+            "options": [
+                "Vertex AI Explainable AI",
+                "Vertex AI Model Monitoring con detección de deriva (drift detection).",
+                "Vertex AI Continuous Evaluation",
+                "Configurar métricas personalizadas en Cloud Monitoring sobre los logs de predicción."
+            ],
+            "correctIndex": 1,
+            "explanation": "Vertex AI Model Monitoring está diseñado explícitamente para detectar deriva (drift) en las características de entrada y/o en las predicciones de los modelos desplegados en Endpoints. Puedes configurarlo para comparar las distribuciones de las solicitudes de predicción online con una distribución de referencia (normalmente, los datos de entrenamiento) y generar alertas si se supera un umbral de deriva especificado. Explainable AI explica predicciones individuales. Continuous Evaluation evalúa métricas de rendimiento con datos etiquetados. Las métricas personalizadas requerirían implementar la lógica de detección de deriva manualmente."
+        },
+        {
+            "question": "Estás diseñando un sistema para ingestar eventos de clickstream desde una aplicación móvil a BigQuery con baja latencia. El volumen de eventos puede variar significativamente. ¿Qué secuencia de servicios de GCP es la más robusta y escalable para este caso de uso?",
+            "options": [
+                "App Móvil -> Cloud Functions -> BigQuery (Tabledata.insertAll API)",
+                "App Móvil -> Pub/Sub -> Dataflow (Streaming) -> BigQuery (Streaming Inserts)",
+                "App Móvil -> Cloud Storage (archivos por lotes) -> BigQuery Data Transfer Service",
+                "App Móvil -> App Engine -> Task Queue -> BigQuery"
+            ],
+            "correctIndex": 1,
+            "explanation": "Pub/Sub actúa como un buffer escalable y desacoplado, absorbiendo picos de ingesta. Dataflow proporciona un motor de procesamiento en streaming robusto y escalable que puede realizar transformaciones si es necesario antes de escribir en BigQuery usando la API de Streaming Inserts, que está diseñada para baja latencia. Cloud Functions puede tener limitaciones de escalabilidad y concurrencia para alto volumen. El enfoque por lotes (no cumple el requisito de baja latencia. App Engine/Task Queue (añade complejidad innecesaria comparado con Pub/Sub/Dataflow."
+        },
+        {
+            "question": "Necesitas asegurar que los datos sensibles (ej. números de tarjeta de crédito) en una tabla de BigQuery sean automáticamente detectados y anonimizados (ej. enmascarados o tokenizados) antes de que un analista de datos, que no debería ver los datos originales, pueda consultarlos. ¿Qué combinación de servicios y características de GCP deberías usar?",
+            "options": [
+                "Cloud IAM para restringir el acceso a la tabla.",
+                "Encriptación a nivel de columna en BigQuery.",
+                "Cloud DLP para crear plantillas de desidentificación y políticas de inspección, combinadas con enmascaramiento dinámico de datos en BigQuery o creando vistas autorizadas con los datos transformados por DLP.",
+                "Escribir un UDF (User Defined Function) en BigQuery que realice el enmascaramiento durante la consulta."
+            ],
+            "correctIndex": 2,
+            "explanation": "Cloud DLP es el servicio diseñado para detectar y clasificar datos sensibles. Sus plantillas de desidentificación pueden definir cómo transformar (enmascarar, tokenizar, etc.) esos datos. Esto se puede integrar con BigQuery de varias maneras: escaneando y creando una copia anonimizada, o más dinámicamente usando vistas autorizadas que aplican transformaciones DLP, o mediante políticas de enmascaramiento dinámico que aplican la lógica de DLP basada en la identidad del usuario que consulta. IAM restringe el acceso pero no transforma los datos. La encriptación protege en reposo/tránsito pero no anonimiza para el análisis. Un UDF es posible pero menos robusto y gestionable que usar DLP."
+        },
+        {
+            "question": "Estás utilizando Vertex AI Pipelines para orquestar un flujo de trabajo de MLOps que incluye preprocesamiento de datos, entrenamiento de modelo, evaluación y despliegue condicional. Necesitas pasar un pequeño artefacto (ej. el ID de un dataset preprocesado en GCS) desde un paso de preprocesamiento a un paso de entrenamiento. ¿Cómo se maneja típicamente el paso de artefactos y parámetros entre componentes en Vertex AI Pipelines?",
+            "options": [
+                "Escribir los artefactos/parámetros en un archivo en un bucket de GCS compartido y leerlo en el siguiente paso.",
+                "Usar variables de entorno definidas en la configuración del pipeline.",
+                "Definir Outputs (Artefactos o Parámetros) en el componente de origen y usarlos como Inputs en el componente de destino, gestionados automáticamente por la plataforma de pipelines.",
+                "Almacenar los metadatos en una tabla de BigQuery y consultarla en el siguiente paso."
+            ],
+            "correctIndex": 2,
+            "explanation": "Vertex AI Pipelines (basado en Kubeflow Pipelines) tiene un sistema incorporado para gestionar el paso de metadatos y artefactos entre componentes. Los componentes pueden declarar Outputs (como OutputPath para archivos o Output[Dataset] para artefactos específicos) y Output[Parameter] para valores pequeños. Estos outputs se convierten automáticamente en Inputs para los componentes subsiguientes que los declaran, y la plataforma maneja el almacenamiento subyacente (generalmente en GCS) y el paso de referencias. Usar GCS directamente (o BigQuery (es posible pero menos idiomático y requiere gestión manual. Las variables de entorno (son para configuración estática, no para pasar datos dinámicos entre pasos."
+        },
+        {
+            "question": "Tienes un conjunto de datos en BigQuery que contiene información de clientes, incluyendo direcciones de correo electrónico. Debes compartir una versión de este conjunto de datos con un tercero para análisis, pero sin revelar las direcciones de correo electrónico reales. Quieres reemplazarlas con un identificador único y consistente para cada dirección, pero que no sea reversible. ¿Qué técnica de desidentificación deberías aplicar usando Cloud DLP?",
+            "options": [
+                "Enmascaramiento (Masking)",
+                "Redacción (Redaction)",
+                "Tokenización Criptográfica (Cryptographic Tokenization) usando un método de Hashing Criptográfico Seguro (como SHA-256).",
+                "Tokenización Preservadora de Formato (Format-Preserving Tokenization) con una clave envuelta."
+            ],
+            "correctIndex": 2,
+            "explanation": "El hashing criptográfico seguro (como SHA-256), disponible a través de las transformaciones de Cloud DLP, genera un identificador único y consistente para cada valor de entrada (la dirección de correo electrónico). Es una operación unidireccional (no reversible), lo que cumple el requisito de no poder recuperar el correo original. El enmascaramiento oculta partes del dato. La redacción lo elimina. La tokenización preservadora de formato, especialmente si la clave se gestiona, podría ser reversible o no ser necesaria si solo se necesita un identificador consistente no reversible."
+        },
+        {
+            "question": "Estás ejecutando un pipeline de Dataflow que realiza una unión (join) entre un stream de eventos grande proveniente de Pub/Sub y un conjunto de datos de referencia relativamente pequeño (menos de 1 Gque se actualiza diariamente y está almacenado en Cloud Storage. ¿Cuál es la forma más eficiente de realizar esta unión en Dataflow?",
+            "options": [
+                "Usar una transformación CoGroupByKey entre las dos PCollections.",
+                "Cargar el conjunto de datos de referencia como una vista lateral (side input) y realizar el lookup en un ParDo que procesa el stream principal.",
+                "Escribir ambos flujos a BigQuery y realizar la unión allí.",
+                "Leer el archivo de referencia desde GCS para cada elemento del stream dentro de un ParDo."
+            ],
+            "correctIndex": 1,
+            "explanation": "Las vistas laterales (side inputs) en Dataflow están diseñadas para unir una PCollection principal (especialmente un stream ilimitado) con datos de referencia que son pequeños, cambian con poca frecuencia y caben en la memoria de los workers. Dataflow distribuirá eficientemente los datos de la vista lateral a los workers. CoGroupByKey requiere que ambas PCollections tengan la misma estructura de clave/valor y es más adecuado para unir dos streams grandes o datasets batch. Escribir a BQ añade latencia. Leer el archivo repetidamente (es extremadamente ineficiente."
+        },
+        {
+            "question": "Entrenaste un modelo de clasificación de imágenes con Vertex AI AutoML Vision. Ahora quieres integrar este modelo en una aplicación móvil Android/iOS para que realice clasificaciones directamente en el dispositivo, incluso sin conexión a internet. ¿Qué formato de exportación de modelo deberías elegir en Vertex AI y qué tecnología usarías en la app móvil?",
+            "options": [
+                "Exportar como SavedModel de TensorFlow y usar TensorFlow Serving en un servidor.",
+                "Exportar como modelo TensorFlow Lite (.tflite) y usar la librería TensorFlow Lite en la aplicación móvil.",
+                "Exportar como contenedor Docker y ejecutarlo en Cloud Run.",
+                "Exportar como ONNX y usar ONNX Runtime en la app móvil."
+            ],
+            "correctIndex": 1,
+            "explanation": "Para la inferencia en el dispositivo (on-device inference) en móviles, TensorFlow Lite (.tflite) es el formato optimizado proporcionado por Google. Vertex AI AutoML Vision permite exportar modelos en este formato. La librería TensorFlow Lite se integra fácilmente en aplicaciones Android e iOS para ejecutar estos modelos localmente, permitiendo baja latencia y funcionamiento offline. Las otras opciones implican inferencia en servidor (a, o un formato diferente (que podría ser compatible pero TFLite es el estándar para AutoML Vision en móviles."
+        },
+        {
+            "question": "Necesitas almacenar metadatos sobre tus tablas en BigQuery, modelos de ML en Vertex AI y pipelines de datos en Dataflow en una ubicación centralizada y permitir el descubrimiento y la gobernanza de estos activos. ¿Qué servicio de GCP está diseñado para este propósito?",
+            "options": [
+                "Cloud Logging",
+                "Cloud Monitoring",
+                "Dataplex",
+                "BigQuery (usando tablas de metadatos personalizadas)"
+            ],
+            "correctIndex": 2,
+            "explanation": "Dataplex es el servicio de tejido de datos inteligente (intelligent data fabride GCP que proporciona un catálogo de metadatos unificado (basado en Data Catalog), gobernanza de datos (incluyendo calidad y linaje) y gestión de seguridad centralizada para activos de datos distribuidos en BigQuery, Cloud Storage y GKE. Permite descubrir, entender y gestionar activos de datos y ML a escala. Logging/Monitoring son para observabilidad operativa. Usar BQ para metadatos requiere una implementación personalizada."
+        },
+        {
+            "question": "Un pipeline de Dataflow que lee de Kafka (gestionado externamente) y escribe a BigQuery falla intermitentemente con errores de OutOfMemoryError en los workers. El pipeline realiza una transformación GroupByKey que agrupa grandes cantidades de datos por clave. ¿Cuál es la causa más probable y la mejor solución?",
+            "options": [
+                "Las claves tienen una distribución muy sesgada (hot keys). Solución: Aplicar una transformación Combine.perKey antes del GroupByKey si es posible, o usar una técnica de salting (añadir un sufijo aleatorio a la clave).",
+                "El tamaño de la ventana es demasiado grande. Solución: Reducir la duración de la ventana.",
+                "La cuota de escritura de BigQuery es insuficiente. Solución: Solicitar aumento de cuota.",
+                "Los workers de Dataflow tienen un tipo de máquina demasiado pequeño. Solución: Especificar un tipo de máquina con más memoria."
+            ],
+            "correctIndex": 0,
+            "explanation": "Los errores OutOfMemoryError durante un GroupByKey en Dataflow suelen ser causados por hot keys – claves que tienen muchísimos más valores asociados que otras. Esto sobrecarga la memoria de los workers que procesan esas claves específicas. Aplicar una combinación previa (Combine.perKey) reduce el volumen de datos antes del shuffle si la operación es asociativa/conmutativa. Si no, añadir sal a la clave distribuye la carga entre más claves y workers, realizando luego una segunda agrupación para eliminar el sal. Aumentar la memoria del worker (puede ayudar pero no resuelve el problema fundamental de la clave sesgada y puede ser costoso. El tamaño de ventana (o la cuota de BQ (son causas menos probables para un OutOfMemoryError específicamente en un GroupByKey."
+        },
+        {
+            "question": "Quieres usar BigQuery ML para entrenar un modelo de clasificación binaria para predecir la probabilidad de que un cliente haga clic en un anuncio. Tienes datos históricos con muchas características categóricas y numéricas. ¿Qué tipo de modelo (MODEL_TYPE) deberías especificar probablemente en tu sentencia CREATE MODEL?",
+            "options": [
+                "LINEAR_REG",
+                "LOGISTIC_REG",
+                "KMEANS",
+                "AUTOML_CLASSIFIER"
+            ],
+            "correctIndex": 1,
+            "explanation": "La regresión logística (LOGISTIC_REG) es un modelo estándar y adecuado para problemas de clasificación binaria (predecir una de dos clases, como clic/no-clic). Maneja bien características categóricas y numéricas. LINEAR_REG es para regresión (predecir un valor continuo). KMEANS es para clustering (agrupación no supervisada). AUTOML_CLASSIFIER podría usarse, pero LOGISTIC_REG es un punto de partida más específico y común para clasificación binaria directamente en BQML."
+        },
+        {
+            "question": "Tu organización tiene políticas estrictas sobre la residencia de datos, exigiendo que ciertos conjuntos de datos en BigQuery permanezcan físicamente dentro de la Unión Europea. Al crear un nuevo conjunto de datos para esta información, ¿qué configuración es crucial especificar?",
+            "options": [
+                "La clase de almacenamiento (Storage Class).",
+                "La ubicación del conjunto de datos (Dataset Location), seleccionando una región o multi-región dentro de la UE (ej. europe-west1 o EU).",
+                "Las etiquetas (Labels) del conjunto de datos.",
+                "La clave de encriptación gestionada por el cliente (CMEK), asegurándose de que la clave esté en la UE."
+            ],
+            "correctIndex": 1,
+            "explanation": "La ubicación (Location) de un conjunto de datos de BigQuery determina la geografía física donde se almacenan los datos. Para cumplir con los requisitos de residencia de datos, es fundamental seleccionar una región o multi-región que se encuentre dentro de los límites geográficos permitidos (en este caso, la UE). Las otras configuraciones (clase de almacenamiento, etiquetas, CMEK) son importantes para otros aspectos, pero no controlan directamente la residencia física de los datos."
+        },
+        {
+            "question": "Estás diseñando un pipeline para procesar archivos de video subidos a Cloud Storage. El pipeline debe extraer el audio, transcribirlo a texto usando la API de Speech-to-Text, y luego analizar el sentimiento del texto usando la API de Natural Language. Quieres orquestar estos pasos de forma robusta. ¿Qué servicio sería el más adecuado para definir y ejecutar este workflow?",
+            "options": [
+                "Cloud Functions encadenadas mediante Pub/Sub.",
+                "Un script complejo ejecutándose en una instancia de Compute Engine.",
+                "Cloud Composer (Airflow) definiendo un DAG con operadores para GCS, Speech-to-Text y Natural Language.",
+                "Dataflow con un pipeline batch."
+            ],
+            "correctIndex": 2,
+            "explanation": "Este es un workflow con pasos dependientes que involucran diferentes APIs y servicios de GCP. Cloud Composer es ideal para orquestar este tipo de procesos, definiendo un DAG (Grafo Acíclico Dirigido) donde cada nodo representa una tarea (ej. disparar la transcripción, esperar el resultado, disparar el análisis de sentimiento). Ofrece manejo de errores, reintentos y visibilidad. Encadenar Functions es frágil. Un script en GCE carece de la robustez y gestión de Airflow. Dataflow es más para procesamiento de datos a gran escala, no tanto para orquestar llamadas a APIs secuenciales como esta."
+        },
+        {
+            "question": "Necesitas anonimizar nombres de personas en un gran volumen de texto no estructurado almacenado en archivos dentro de Cloud Storage antes de que sean analizados. Quieres reemplazar los nombres con el tipo de entidad detectada (ej. PERSON_NAME). ¿Qué combinación de servicios usarías?",
+            "options": [
+                "Dataflow para leer los archivos y BigQuery ML para detectar y reemplazar nombres.",
+                "Cloud Functions activadas por GCS para llamar a la API de Cloud Natural Language para detectar entidades.",
+                "Usar la API de Cloud Data Loss Prevention (DLP) con una acción replaceWithInfoType configurada en un job de inspección sobre el bucket de GCS.",
+                "Entrenar un modelo NER personalizado en Vertex AI y aplicarlo con un job de Batch Prediction."
+            ],
+            "correctIndex": 2,
+            "explanation": "Cloud DLP está específicamente diseñado para detectar y transformar (desidentificar) información sensible, incluyendo tipos de infoTypes como PERSON_NAME. Puede operar directamente sobre datos en Cloud Storage a través de jobs de inspección. La acción replaceWithInfoType reemplaza el texto detectado con el nombre del infoType, cumpliendo exactamente el requisito. Usar la API de NL (requeriría implementar la lógica de reemplazo. BQML (no opera directamente sobre archivos en GCS de esta manera. Entrenar un modelo personalizado (es innecesario si DLP ya detecta nombres de personas."
+        },
+        {
+            "question": "Tienes una tabla muy grande en BigQuery particionada por fecha de ingesta. Las consultas que filtran por un ID de cliente específico (customer_ison lentas porque escanean particiones enteras. ¿Qué optimización adicional deberías aplicar a la tabla para acelerar estas consultas?",
+            "options": [
+                "Cambiar la partición a customer_id.",
+                "Clusterizar la tabla por la columna customer_id.",
+                "Crear una vista materializada filtrada por customer_id.",
+                "Usar la API de BigQuery Storage Read para leer los datos más rápido."
+            ],
+            "correctIndex": 1,
+            "explanation": "Dado que la tabla ya está particionada (presumiblemente por una columna de fecha, lo cual es común y útil), añadir clustering por customer_id es la optimización ideal para acelerar los filtros sobre esa columna. El clustering co-localiza físicamente las filas con el mismo customer_id dentro de cada partición, permitiendo a BigQuery evitar escanear bloques enteros de datos que no contienen el customer_id buscado. Cambiar la partición a customer_id podría no ser ideal si los rangos de fechas también son importantes. Las vistas materializadas pueden ayudar pero el clustering es más directo para este patrón de filtro. La API Storage Read acelera la lectura, pero no reduce los datos escaneados por el filtro."
+        },
+        {
+            "question": "Quieres programar la ejecución de un script de Python que realiza una consulta en BigQuery y guarda los resultados en un bucket de Cloud Storage cada lunes a las 3 AM. El script es relativamente simple y de corta duración. ¿Cuál es la forma más sencilla y rentable de implementar esta tarea programada en GCP?",
+            "options": [
+                "Configurar un cron job en una instancia de Compute Engine siempre encendida.",
+                "Usar Cloud Composer con un DAG simple.",
+                "Usar Cloud Scheduler para activar una Cloud Function que ejecute el script de Python.",
+                "Desplegar el script como un servicio en Cloud Run y activarlo con Cloud Scheduler."
+            ],
+            "correctIndex": 2,
+            "explanation": "Para tareas programadas simples y de corta duración, la combinación de Cloud Scheduler (para la programación cron) y Cloud Functions (para la ejecución serverless del script) es la solución más gestionada, rentable y sencilla. No requiere mantener infraestructura (como GCE) ni la sobrecarga de un orquestador completo como Composer. Cloud Run también es una opción serverless, pero Cloud Functions suele ser más directo para scripts individuales activados por eventos o programaciones."
+        },
+        {
+            "question": "Estás construyendo un pipeline de MLOps usando Vertex AI Pipelines. Quieres asegurarte de que un modelo solo se despliegue en producción si su métrica de precisión en un conjunto de datos de evaluación supera un umbral predefinido (ej. 90%). ¿Cómo implementarías esta lógica condicional dentro del pipeline?",
+            "options": [
+                "Usar un componente Conditional basado en un parámetro de salida del paso de evaluación del modelo.",
+                "Escribir un script personalizado que verifique la métrica y llame a la API de despliegue si se cumple la condición.",
+                "Configurar una política de IAM que restrinja el despliegue basado en métricas.",
+                "Usar Cloud Monitoring para monitorear la métrica y activar el despliegue a través de una alerta."
+            ],
+            "correctIndex": 0,
+            "explanation": "Vertex AI Pipelines (basado en KFP SDK v2) incluye componentes condicionales (with dsl.Condition(...)) que permiten ejecutar ramas del pipeline basadas en el resultado de una comparación de parámetros de salida de pasos anteriores. Puedes tener un paso de evaluación que emita la métrica de precisión como un Output[Parameter] y luego usar una condición dsl.Condition(metric >= thresholpara decidir si ejecutar o no el componente de despliegue. Esta es la forma idiomática y declarativa de manejar la lógica condicional dentro de los pipelines."
+        },
+        {
+            "question": "Necesitas proporcionar acceso temporal a un contratista externo para que pueda cargar archivos en un bucket específico de Cloud Storage durante las próximas 48 horas. No quieres crear una cuenta de Google permanente para el contratista. ¿Cuál es la forma más segura y adecuada de conceder este acceso?",
+            "options": [
+                "Crear una cuenta de servicio, generar una clave JSON y enviársela al contratista.",
+                "Usar URLs firmadas (Signed URLs) de Cloud Storage con un tiempo de expiración corto para la acción de carga (PUT o POST).",
+                "Añadir la dirección de correo personal del contratista al IAM del bucket con el rol roles/storage.objectCreator.",
+                "Configurar una política de firma de V4 (V4 Signed Policy Document) que permita cargas durante 48 horas."
+            ],
+            "correctIndex": 1,
+            "explanation": "Si bien las políticas de firma V4 son poderosas, para un acceso temporal de carga de archivos por parte de un contratista sin una cuenta de Google permanente, la forma más sencilla y segura es usar URLs firmadas (Signed URLs) con un tiempo de expiración de 48 horas para las acciones PUT o POST. Esto genera una URL única que el contratista puede usar para cargar archivos directamente al bucket dentro del período especificado, sin necesidad de credenciales adicionales. Las políticas de firma son más complejas de generar y usar para este caso puntual."
+        },
+        {
+            "question": "Estás analizando datos de rendimiento de consultas en BigQuery usando las vistas INFORMATION_SCHEMA.JOBS_BY_*. Observas que muchas consultas tienen un alto valor en total_slot_ms pero un bajo total_bytes_processed. ¿Qué indica esto probablemente sobre esas consultas y qué podrías investigar para optimizarlas?",
+            "options": [
+                "Las consultas están leyendo muchos datos pequeños pero realizando operaciones de cómputo muy intensivas (ej. UDFs complejos, JOINs explosivos, expresiones regulares costosas). Investigar el plan de consulta y optimizar las etapas de cómputo.",
+                "Las consultas están esperando recursos (slots) y pasan mucho tiempo en cola. Investigar la concurrencia y considerar reservas de slots.",
+                "Las consultas están leyendo grandes cantidades de datos desde tablas externas. Investigar si se pueden materializar en tablas nativas.",
+                "Hay un problema con la recolección de estadísticas de la tabla, lo que lleva a planes de consulta subóptimos. Ejecutar ANALYZE TABLE."
+            ],
+            "correctIndex": 0,
+            "explanation": "total_slot_ms representa el tiempo de cómputo consumido por la consulta en todos los slots. Si es alto mientras que total_bytes_processed (los datos leídos) es bajo, sugiere que la mayor parte del esfuerzo se dedica al procesamiento (CPU) en lugar de la E/S. Causas comunes son funciones complejas (JavaScript UDFs son notorias), JOINs que generan muchas filas intermedias (producto cartesiano accidental), o funciones analíticas/expresiones regulares complejas. El plan de consulta (Query plan explanation) revelará qué etapas consumen más slots. La espera de slots (se refleja en total_pending_ms. Las tablas externas (suelen aumentar total_bytes_processed o la latencia. Las estadísticas (afectan la planificación, pero el síntoma apunta a cómputo intensivo."
+        },
+        {
+            "question": "Quieres entrenar un modelo de detección de objetos en imágenes usando Vertex AI, pero tienes un presupuesto limitado para el etiquetado manual de datos. Solo una pequeña fracción de tu gran conjunto de imágenes está etiquetada con cuadros delimitadores (bounding boxes). ¿Qué estrategia de entrenamiento en Vertex AI podría ayudarte a aprovechar tanto los datos etiquetados como los no etiquetados para mejorar el rendimiento del modelo?",
+            "options": [
+                "Usar Vertex AI AutoML Vision Object Detection, ya que maneja automáticamente conjuntos de datos parcialmente etiquetados.",
+                "Ignorar los datos no etiquetados y entrenar solo con la pequeña fracción etiquetada.",
+                "Implementar un enfoque de aprendizaje semi-supervisado (semi-supervised learning) usando un trabajo de entrenamiento personalizado (Custom Training) en Vertex AI.",
+                "Usar BigQuery ML para entrenar el modelo, ya que tiene capacidades semi-supervisadas incorporadas."
+            ],
+            "correctIndex": 2,
+            "explanation": "El aprendizaje semi-supervisado es una técnica diseñada para mejorar el rendimiento del modelo utilizando una gran cantidad de datos no etiquetados junto con una pequeña cantidad de datos etiquetados. Aunque AutoML puede tener algunas optimizaciones, no está explícitamente diseñado para el aprendizaje semi-supervisado complejo. Para implementarlo de manera efectiva (usando técnicas como pseudo-etiquetado o consistency regularization), necesitarías desarrollar un script de entrenamiento personalizado y ejecutarlo como un Custom Training Job en Vertex AI. Ignorar datos (es subóptimo. BQML no es adecuado para detección de objetos en imágenes."
+        },
+        {
+            "question": "Necesitas transferir datos diariamente desde una base de datos MySQL on-premises a una tabla en BigQuery. Quieres una solución gestionada por Google que maneje el esquema, la carga incremental y la programación. ¿Qué servicio de GCP deberías usar?",
+            "options": [
+                "Escribir un script personalizado con mysqldump y bq load.",
+                "Usar Dataflow con conectores JDBC y BigQueryIO.",
+                "Configurar BigQuery Data Transfer Service con el conector para Cloud SQL (requiere replicación previa a Cloud SQL) o usar un conector de terceros si es directo desde on-prem.",
+                "Usar Datastream para replicar cambios de MySQL a Cloud Storage y luego cargar desde GCS a BigQuery."
+            ],
+            "correctIndex": 3,
+            "explanation": "Datastream es el servicio de CDC (Change Data Capture) y replicación gestionado de GCP. Puede capturar cambios casi en tiempo real (o en batch) desde bases de datos como MySQL (on-premises o en la nube) y replicarlos a destinos como Cloud Storage. Una vez los datos (o cambios) están en GCS, se pueden cargar fácilmente a BigQuery usando Data Transfer Service, Dataflow, o bq load. Esto proporciona una solución robusta y gestionada para la replicación continua o incremental. BigQuery DTS no tiene un conector directo para MySQL on-premises. Dataflow requiere más desarrollo. El script personalizado es menos robusto."
+        },
+        {
+            "question": "Estás almacenando archivos Parquet en un bucket de Cloud Storage y quieres consultarlos directamente usando BigQuery sin cargarlos en el almacenamiento nativo de BigQuery. ¿Qué tipo de tabla deberías crear en BigQuery?",
+            "options": [
+                "Una tabla estándar de BigQuery.",
+                "Una tabla externa (External Table).",
+                "Una vista materializada (Materialized View).",
+                "Una vista (View) lógica."
+            ],
+            "correctIndex": 1,
+            "explanation": "Las tablas externas en BigQuery permiten consultar datos almacenados en Cloud Storage (en formatos como Parquet, ORC, Avro, CSV, JSON) directamente, sin necesidad de cargar o duplicar los datos en el almacenamiento gestionado de BigQuery. Simplemente defines la tabla apuntando a la ubicación de los archivos en GCS y especificando el formato."
+        },
+        {
+            "question": "Has entrenado un modelo de lenguaje grande (LLM) personalizado en Vertex AI para generar resúmenes de texto. Quieres evaluar la calidad de los resúmenes generados utilizando métricas estándar como ROUGE. ¿Cómo puedes integrar esta evaluación en tu flujo de trabajo de MLOps en Vertex AI?",
+            "options": [
+                "Utilizar las métricas incorporadas de Vertex AI Model Monitoring.",
+                "Crear un componente personalizado en Vertex AI Pipelines que calcule ROUGE scores comparando los resúmenes generados con resúmenes de referencia.",
+                "Usar Vertex AI Explainable AI para obtener puntuaciones de calidad.",
+                "Exportar los resultados a BigQuery y calcular ROUGE usando SQL UDFs."
+            ],
+            "correctIndex": 1,
+            "explanation": "Métricas específicas de NLP como ROUGE no suelen estar incorporadas directamente en la evaluación automática estándar o el monitoreo de Vertex AI (que se centra más en clasificación/regresión o deriva). La forma más flexible y estándar de calcular métricas personalizadas o específicas de dominio como ROUGE es crear un componente personalizado (usando Python y bibliotecas como rouge-score) dentro de tu Vertex AI Pipeline. Este componente tomaría las predicciones del modelo y los datos de referencia como entrada y emitiría las puntuaciones calculadas como métricas o artefactos. Explainable AI es para interpretabilidad, no evaluación de calidad. Calcular en BQ es posible pero menos integrado en el pipeline de MLOps."
+        },
+        {
+            "question": "Necesitas implementar un pipeline de datos que procese información sensible sujeta a GDPR. El pipeline se ejecutará en Dataflow. ¿Qué medidas de seguridad son fundamentales aplicar para proteger los datos en tránsito y asegurar que el procesamiento ocurra dentro de una red controlada?",
+            "options": [
+                "Usar CMEK para encriptar los datos en las fuentes y destinos (ej. Pub/Sub, GCS, BigQuery).",
+                "Ejecutar los workers de Dataflow dentro de una red VPC compartida y usar Private Google Access.",
+                "Deshabilitar el acceso a IP públicas en los workers de Dataflow y configurar VPC Service Controls para crear un perímetro de seguridad alrededor de los servicios utilizados (Dataflow, GCS, BigQuery, Pub/Sub).",
+                "Confiar en la encriptación en tránsito predeterminada de Google y enfocarse solo en los permisos IAM."
+            ],
+            "correctIndex": 2,
+            "explanation": "Para asegurar que el procesamiento de datos sensibles ocurra dentro de un entorno de red controlado y prevenir la exfiltración de datos, es crucial: 1) Deshabilitar el acceso a IP públicas en los workers de Dataflow (--usePublicIps=false) para que no puedan acceder a internet directamente. 2) Configurar Private Google Access en la subred para que los workers puedan alcanzar las APIs de Google sin IP pública."
+        },
+        {
+            "question": "Tu equipo está utilizando Cloud Composer para orquestar pipelines ETL. El entorno de Composer está experimentando lentitud y fallos en la ejecución de tareas. Quieres diagnosticar el problema. ¿Qué herramientas y métricas dentro de GCP deberías revisar primero?",
+            "options": [
+                "Los logs de las tareas de Airflow en Cloud Logging y las métricas de utilización de CPU/Memoria del clúster GKE de Composer en Cloud Monitoring.",
+                "Las métricas de latencia de la API de BigQuery.",
+                "Los logs de auditoría de Cloud Storage.",
+                "Las métricas de rendimiento de la red VPC."
+            ],
+            "correctIndex": 0,
+            "explanation": "Cuando un entorno de Cloud Composer tiene problemas, los primeros lugares para buscar son: 1) Los logs específicos de las tareas de Airflow que fallan o se retrasan, disponibles en la UI de Airflow y en Cloud Logging (bajo airflow-scheduler, airflow-worker, etc.). Estos logs contienen los errores específicos o stack traces. 2) Las métricas de utilización de recursos (CPU, memoridel clúster de Google Kubernetes Engine (GKE) subyacente que ejecuta Composer, disponibles en Cloud Monitoring. Un clúster sobrecargado es una causa común de lentitud y fallos. Las otras métricas (b, c, son relevantes para los servicios con los que interactúa Composer, pero los problemas del propio entorno de Composer se diagnostican mejor con sus logs y métricas de clúster."
+        },
+        {
+            "question": "Estás usando Vertex AI Feature Store para servir características online. Observas que la latencia de obtención de características (online_serving_latency) ha aumentado. ¿Qué factor es MENOS probable que contribuya directamente a este aumento de latencia?",
+            "options": [
+                "El tamaño total del Feature Store (número de entidades o características).",
+                "La complejidad del tipo de datos de las características que se están sirviendo.",
+                "El número de solicitudes de servicio online por segundo (QPS).",
+                "La distancia geográfica entre la aplicación cliente y la región del endpoint de servicio online."
+            ],
+            "correctIndex": 0,
+            "explanation": "Vertex AI Feature Store está diseñado para escalar horizontalmente y proporcionar baja latencia independientemente del tamaño total del almacén (número de entidades o características almacenadas). La latencia de servicio online se ve más afectada por la carga actual (QPS) (c), la complejidad de los datos que se recuperan por solicitud (b), y la latencia de red entre el cliente y el servidor (d). Si bien un tamaño extremo podría tener efectos indirectos, no es un factor directo en la latencia de una solicitud individual como los otros."
+        },
+        {
+            "question": "Quieres crear una copia de seguridad de una tabla importante de BigQuery cada día y retener las copias de seguridad durante 30 días. ¿Cuál es la forma más idiomática y eficiente de lograr esto en BigQuery?",
+            "options": [
+                "Programar un job de exportación de la tabla a Cloud Storage cada día y configurar una política de ciclo de vida en el bucket.",
+                "Usar la funcionalidad de instantáneas de tabla (Table Snapshots) de BigQuery, creando una instantánea diaria y eliminando las que tengan más de 30 días.",
+                "Ejecutar una consulta CREATE TABLE AS SELECT (CTAS) cada día para copiar la tabla.",
+                "Usar BigQuery Data Transfer Service para copiar la tabla a otro conjunto de datos diariamente."
+            ],
+            "correctIndex": 1,
+            "explanation": "Las instantáneas de tabla (Table Snapshots) de BigQuery están diseñadas específicamente para crear copias puntuales y de bajo costo de las tablas. Crear una instantánea es una operación de metadatos rápida y económica. Puedes programar la creación de instantáneas diarias (usando Cloud Scheduler y la API de BQ, o una herramienta de orquestación) y luego tener otro proceso que elimine las instantáneas con más de 30 días. Las exportaciones a GCS (sacan los datos de BQ y requieren recarga para restaurar. CTAS (copia todos los datos físicamente, lo cual es más caro en almacenamiento y procesamiento que las instantáneas. DTS (es más para transferir datos entre ubicaciones o fuentes externas."
+        },
+        {
+            "question": "Un pipeline de Dataflow que lee de Pub/Sub y realiza agregaciones basadas en ventanas de tiempo necesita garantizar que cada elemento se procese exactamente una vez, incluso si los workers fallan y se reinician. ¿Qué modo de procesamiento debería habilitar Dataflow y qué característica de Pub/Sub ayuda a lograr esto?",
+            "options": [
+                "Modo At Least Once en Dataflow y reconocimiento (ack) de mensajes en Pub/Sub.",
+                "Modo Exactly-Once (procesamiento efectivo exactly-once) en Dataflow, que se basa en el almacenamiento persistente de Dataflow y el reconocimiento (ack) de mensajes en Pub/Sub.",
+                "Usar Dataflow SQL con semántica exactly-once.",
+                "Implementar lógica de duplicación personalizada en el pipeline."
+            ],
+            "correctIndex": 1,
+            "explanation": "Dataflow proporciona semántica de procesamiento efectivo exactly-once para pipelines de streaming que leen de fuentes como Pub/Sub. Esto se logra combinando el mecanismo de reconocimiento de mensajes de Pub/Sub (que asegura que un mensaje no se pierda hasta que se reconozccon el sistema interno de Dataflow que guarda el estado del procesamiento (como las agregaciones parciales) de forma persistente y utiliza identificadores únicos para detectar y descartar duplicados que podrían surgir durante reintentos o reinicios de workers. No es un modo que se habilite explícitamente como tal, sino la garantía que ofrece el servicio cuando se usan fuentes y sumideros compatibles y transformaciones idempotentes o con estado gestionado por Dataflow. La lógica personalizada (es compleja y propensa a errores."
+        },
+        {
+            "question": "Estás evaluando dos modelos de clasificación entrenados en Vertex AI para un problema de detección de spam. El Modelo A tiene mayor precisión general, pero el Modelo B tiene un 'recall' (sensibilidamucho mayor para la clase 'spam'. Dado que es crítico identificar la mayor cantidad posible de correos spam, incluso a costa de algunos falsos positivos, ¿qué métrica y qué modelo deberías priorizar?",
+            "options": [
+                "Priorizar la precisión y el Modelo A.",
+                "Priorizar el 'recall' (sensibilidapara la clase 'spam' y el Modelo B.",
+                "Priorizar la puntuación F1 y elegir el modelo con la mejor puntuación F1.",
+                "Priorizar el AUC (Área bajo la curva ROy elegir el modelo con el mayor AUC."
+            ],
+            "correctIndex": 1,
+            "explanation": "El 'recall' (o sensibilidamide la proporción de positivos reales (correos spam) que el modelo identificó correctamente. Si el objetivo principal es minimizar los falsos negativos (spam no detectado), entonces el 'recall' para la clase positiva ('spam') es la métrica más importante. Por lo tanto, se debe priorizar el Modelo B, que tiene un mayor 'recall' para el spam, aceptando potencialmente una menor precisión (más falsos positivos). La precisión se enfoca en cuán correctas son las predicciones positivas. F1 es un balance entre precisión y 'recall'. AUC mide la capacidad general de discriminación, pero no refleja directamente el coste específico de los falsos negativos en este escenario."
+        },
+        {
+            "question": "Estás desarrollando una aplicación que permite a los usuarios subir imágenes de productos. Quieres utilizar la IA para automáticamente identificar los productos en las imágenes y categorizarlos. Buscas una solución completamente gestionada y fácil de integrar sin necesidad de un extenso entrenamiento de modelos personalizado. ¿Qué servicio de Vertex AI sería el más adecuado para esta tarea?",
+            "options": [
+                "Vertex AI Custom Training",
+                "Vertex AI Vision AI",
+                "Vertex AI Natural Language AI",
+                "Vertex AI Workbench"
+            ],
+            "correctIndex": 1,
+            "explanation": "Vertex AI Vision AI ofrece modelos pre-entrenados y APIs para diversas tareas de visión por computadora, incluyendo la clasificación de imágenes y la detección de objetos. Es una solución completamente gestionada que simplifica la integración de capacidades de IA de visión en aplicaciones sin requerir un entrenamiento de modelos desde cero."
+        },
+        {
+            "question": "Tu equipo está construyendo un chatbot de atención al cliente y necesita integrar capacidades avanzadas de comprensión del lenguaje natural, incluyendo la detección de la intención del usuario, la extracción de entidades y la respuesta conversacional. Quieres una solución robusta y escalable dentro de GCP. ¿Qué servicio de IA sería la mejor opción?",
+            "options": [
+                "Cloud Speech-to-Text",
+                "Cloud Translation",
+                "Vertex AI Conversation",
+                "Vertex AI Document AI"
+            ],
+            "correctIndex": 2,
+            "explanation": "Vertex AI Conversation está diseñado específicamente para construir interfaces conversacionales potentes. Ofrece herramientas y modelos para la comprensión del lenguaje natural (NLU), la gestión del diálogo y la generación de respuestas, facilitando la creación de chatbots sofisticados."
+        },
+        {
+            "question": "Necesitas procesar grandes volúmenes de documentos no estructurados (PDFs, imágenes de documentos escaneados) para extraer información clave como nombres, direcciones y números de factura. Buscas una solución de IA que pueda manejar la complejidad de diferentes formatos de documentos. ¿Qué servicio de GCP sería el más apropiado?",
+            "options": [
+                "Vertex AI Vision AI (para clasificación de imágenes)",
+                "Vertex AI Natural Language AI (para análisis de texto plano)",
+                "Vertex AI Document AI Cloud Storage con OCR habilitado"
+            ],
+            "correctIndex": 2,
+            "explanation": "Vertex AI Document AI está diseñado específicamente para el procesamiento inteligente de documentos. Utiliza modelos de IA avanzados para comprender la estructura de los documentos y extraer información relevante de diversos formatos, incluyendo PDFs e imágenes escaneadas."
+        },
+        {
+            "question": "Estás desarrollando una aplicación que requiere la generación de texto creativo, como la redacción de correos electrónicos de marketing o la creación de descripciones de productos. Quieres aprovechar los modelos de lenguaje grandes (LLMs) más recientes de Google. ¿Qué componente de Vertex AI te permitiría acceder a estos modelos generativos?",
+            "options": [
+                "Vertex AI Model Registry",
+                "Vertex AI Feature Store",
+                "Vertex AI Generative AI Studio",
+                "Vertex AI Workbench"
+            ],
+            "correctIndex": 2,
+            "explanation": "Vertex AI Generative AI Studio proporciona una interfaz para experimentar, prototipar y desplegar aplicaciones basadas en los modelos de lenguaje grandes de Google, como PaLM 2. Permite la generación de texto, la traducción, la respuesta a preguntas y otras tareas creativas basadas en texto."
+        },
+        {
+            "question": "Quieres integrar capacidades de búsqueda semántica en tu aplicación para que los usuarios puedan encontrar información relevante basándose en el significado de sus consultas, en lugar de solo en coincidencias de palabras clave. Tienes un gran corpus de documentos de texto. ¿Qué servicio de IA en GCP sería el más adecuado para construir un índice de búsqueda semántica?",
+            "options": [
+                "Vertex AI Natural Language AI (para análisis de sentimiento)",
+                "Vertex AI Matching Engine",
+                "BigQuery con búsqueda de texto completo",
+                "Cloud Firestore (para almacenamiento de documentos)"
+            ],
+            "correctIndex": 1,
+            "explanation": "Vertex AI Matching Engine es un servicio para construir y desplegar índices vectoriales a gran escala para la búsqueda por similitud semántica. Permite indexar las representaciones vectoriales (embeddings) de tus documentos y realizar búsquedas eficientes basadas en la similitud semántica de las consultas de los usuarios."
+        }
+    ]
+    
